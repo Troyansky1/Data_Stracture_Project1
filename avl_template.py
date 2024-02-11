@@ -233,6 +233,12 @@ class AVLTree(object):
 		self.size -= 1
 		return -1
 
+	def req_avl_to_array(self, node, keys_list):
+		if node is not None:
+			self.req_avl_to_array(self, node.get_left, keys_list)
+			keys_list.append({node.get_key(), node.get_value})
+			self.req_avl_to_array(self, node.get_right, keys_list)
+		return
 
 	"""returns an array representing dictionary 
 
@@ -240,8 +246,9 @@ class AVLTree(object):
 	@returns: a sorted list according to key of touples (key, value) representing the data structure
 	"""
 	def avl_to_array(self):
-		return None
-
+		keys_list = []
+		self.req_avl_to_array(self, self.root, keys_list)
+		return keys_list
 
 	"""returns the number of items in dictionary 
 
