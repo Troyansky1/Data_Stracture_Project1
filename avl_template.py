@@ -86,8 +86,15 @@ class AVLNode(object):
 	def get_height(self):
 		return self.height
 
+	"""returns the Balance Factor
+
+		@rtype: int
+		@returns: height of left - height of right (height is -1 if the node does not exist)
+	"""
 	def get_BF(self):
-		return #TODO
+		height_right = -1 if self.get_right() is None else self.get_right().get_height()
+		height_left = -1 if self.get_left() is None else self.get_left().get_height()
+		return height_left - height_right
 
 	"""sets left child
 
