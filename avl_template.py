@@ -77,6 +77,8 @@ class AVLNode(object):
 	def get_height(self):
 		return self.height
 
+	def get_BF(self):
+		return #TODO
 
 	"""sets left child
 
@@ -84,7 +86,7 @@ class AVLNode(object):
 	@param node: a node
 	"""
 	def set_left(self, node):
-		if(self.left==null):
+		if self.left is None:
 			self.left=node
 		else:
 			print("problem with set left")
@@ -97,7 +99,7 @@ class AVLNode(object):
 	@param node: a node
 	"""
 	def set_right(self, node):
-		if (self.right == null):
+		if self.right is None:
 			self.right = node
 		else:
 			print("problem with set right")
@@ -110,7 +112,7 @@ class AVLNode(object):
 	@param node: a node
 	"""
 	def set_parent(self, node):
-		self.parent=node
+		self.parent = node
 		return None
 
 
@@ -120,7 +122,7 @@ class AVLNode(object):
 	@param key: key
 	"""
 	def set_key(self, key):
-		self.key=key
+		self.key = key
 		return None
 
 
@@ -130,7 +132,7 @@ class AVLNode(object):
 	@param value: data
 	"""
 	def set_value(self, value):
-		slef.value=value
+		self.value = value
 		return None
 
 
@@ -140,7 +142,7 @@ class AVLNode(object):
 	@param h: the height
 	"""
 	def set_height(self, h):
-		self.height=h
+		self.height = h
 		return None
 
 
@@ -166,7 +168,7 @@ class AVLTree(object):
 	"""
 	def __init__(self):
 		self.root = None
-		# add your fields here
+		self.size = 0
 
 
 
@@ -192,6 +194,7 @@ class AVLTree(object):
 	@returns: the number of rebalancing operation due to AVL rebalancing
 	"""
 	def insert(self, key, val):
+		self.size += 1
 		return -1
 
 
@@ -203,6 +206,7 @@ class AVLTree(object):
 	@returns: the number of rebalancing operation due to AVL rebalancing
 	"""
 	def delete(self, node):
+		self.size -= 1
 		return -1
 
 
@@ -221,7 +225,7 @@ class AVLTree(object):
 	@returns: the number of items in dictionary 
 	"""
 	def size(self):
-		return -1	
+		return self.size
 
 	
 	"""splits the dictionary at the i'th index
@@ -235,6 +239,7 @@ class AVLTree(object):
 	dictionary larger than node.key.
 	"""
 	def split(self, node):
+		#update size
 		return None
 
 	
@@ -251,6 +256,7 @@ class AVLTree(object):
 	@returns: the absolute value of the difference between the height of the AVL trees joined
 	"""
 	def join(self, tree2, key, val):
+		self.size += tree2.size + 1
 		return None
 
 
