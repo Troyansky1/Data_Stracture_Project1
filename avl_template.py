@@ -238,6 +238,17 @@ class AVLTree(object):
 		self.l_rotate(node)
 		return 2
 
+	# TODO double check this, it's very confusing :)
+	def get_rotate_func(self, node):
+		if node is not None:
+			if node.get_BF() == -2 and (node.get_right.get_BF() == -1 or node.get_left.get_BF() == 0):
+				return self.l_rotate
+			elif node.get_BF() == -2 and (node.get_right.get_BF() == 1):
+				return self.r_l_rotate
+			elif node.get_BF() == 2 and (node.get_left.get_BF() == 1 or node.get_right.get_BF() == 0):
+				return self.r_rotate
+			elif node.get_BF() == 2 and (node.get_left.get_BF() == -1):
+				return self.r_l_rotate
 
 	"""inserts val at position i in the dictionary
 
