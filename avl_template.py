@@ -42,6 +42,15 @@ class AVLNode(object):
 		return self.right
 
 
+	"""sets the parent 
+
+	@rtype: AVLNode
+	@param node: a node
+	@returns: sets the parent of self
+	"""
+	def set_parent(self, node):
+		self.parent = node
+
 	"""returns the parent 
 
 	@rtype: AVLNode
@@ -227,7 +236,7 @@ class AVLTree(object):
 	def size(self):
 		return self.size
 
-	
+
 	"""splits the dictionary at the i'th index
 
 	@type node: AVLNode
