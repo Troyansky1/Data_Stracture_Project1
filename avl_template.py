@@ -206,6 +206,38 @@ class AVLTree(object):
 	def search(self, key):
 		return self.req_search(key, self.root)
 
+	def l_rotate(self, node):
+		if node is not None:
+			parent = node.get_parent()
+			new_root = node.get_right()
+			new_root.parent = parent
+			child_to_move = new_root.get_left()
+			node.set_right(child_to_move)
+			new_root.set_left(node)
+			# update heights
+			return 1
+
+	def r_rotate(self, node):
+		if node is not None:
+			parent = node.get_parent()
+			new_root = node.get_left()
+			new_root.parent = parent
+			child_to_move = new_root.get_right()
+			node.set_left(child_to_move)
+			new_root.set_right(node)
+			# update heights
+			return 1
+
+	def l_r_rotate(self, node):
+		self.l_rotate(node.get_left)
+		self.r_rotate(node)
+		return 2
+
+	def r_l_rotate(self, node):
+		self.r_rotate(node.get_right)
+		self.l_rotate(node)
+		return 2
+
 
 	"""inserts val at position i in the dictionary
 
