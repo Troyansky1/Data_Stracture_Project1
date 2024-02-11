@@ -103,7 +103,7 @@ class AVLNode(object):
 	"""
 	def set_left(self, node):
 		if self.left is None:
-			self.left=node
+			self.left = node
 		else:
 			print("problem with set left")
 		return None
@@ -186,7 +186,15 @@ class AVLTree(object):
 		self.root = None
 		self.size = 0
 
-
+	def req_search(self, node, key):  # not sure if self needed
+		if node is not None:
+			if node.key == key:
+				return node
+			elif node.key < key:
+				return self.req_search(node.get_right(), key)
+			else:
+				return self.req_search(node.get_left(), key)
+		return None
 
 	"""searches for a AVLNode in the dictionary corresponding to the key
 
@@ -196,7 +204,7 @@ class AVLTree(object):
 	@returns: the AVLNode corresponding to key or None if key is not found.
 	"""
 	def search(self, key):
-		return None
+		return self.req_search(key, self.root)
 
 
 	"""inserts val at position i in the dictionary
