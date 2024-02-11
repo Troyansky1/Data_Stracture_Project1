@@ -258,7 +258,6 @@ class AVLTree(object):
 	def size(self):
 		return self.size
 
-
 	"""splits the dictionary at the i'th index
 
 	@type node: AVLNode
@@ -297,4 +296,4 @@ class AVLTree(object):
 	@returns: the root, None if the dictionary is empty
 	"""
 	def get_root(self):
-		return None
+		return self.root
