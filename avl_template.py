@@ -151,6 +151,8 @@ class AVLNode(object):
 		self.value = value
 		return None
 
+	def recalc_height(self):
+		self.height = max(self.get_left().get_height(), self.get_right().get_height())
 
 	"""sets the height of the node
 
@@ -250,6 +252,38 @@ class AVLTree(object):
 			elif node.get_BF() == 2 and (node.get_left.get_BF() == -1):
 				return self.r_l_rotate
 
+
+	def fix_tree(self, node,  after_insert):
+		num_actions = 0
+		parent = node.get_parent()
+		while parent is not None:
+			last_height = parent.get_height()
+			parent.set_height()
+			if abs(parent.get_BF()) == 2:
+				rotate_func = self.get_rotate_func(parent)
+				num_actions += rotate_func()
+			elif parent.get_height() == last_height:
+				if after_insert:
+					return num_actions
+			parent = parent.get_parent()
+		return num_actions
+
+	def req_insert(self, node, root):
+		if node.get_value() > root.get_value():
+			if root.get_right() is None:
+				root.set_right(node)
+				node.set_parent(root)
+				return
+			else:
+				self.req_insert(node, root.get_right())
+		elif node.get_value() < root.get_value():
+			if root.get_left() is None:
+				root.set_left(node)
+				node.set_parent(root)
+				return
+			else:
+				self.req_insert(node, root.get_left())
+
 	"""inserts val at position i in the dictionary
 
 	@type key: int
@@ -261,8 +295,10 @@ class AVLTree(object):
 	@returns: the number of rebalancing operation due to AVL rebalancing
 	"""
 	def insert(self, key, val):
+		node = AVLNode(key, val)
+		self.req_insert(node, self.root)
 		self.size += 1
-		return -1
+		return self.fix_tree(node, after_insert=True)
 
 
 	"""deletes node from the dictionary
