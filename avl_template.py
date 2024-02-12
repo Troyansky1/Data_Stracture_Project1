@@ -178,6 +178,10 @@ class AVLNode(object):
 A class implementing the ADT Dictionary, using an AVL tree.
 """
 
+
+
+
+
 class AVLTree(object):
 
 	"""
@@ -205,6 +209,10 @@ class AVLTree(object):
 	@rtype: AVLNode
 	@returns: the AVLNode corresponding to key or None if key is not found.
 	"""
+
+	def get_size(self):
+		return self.size
+
 	def search(self, key):
 		return self.req_search(key, self.root)
 
@@ -334,8 +342,6 @@ class AVLTree(object):
 	@rtype: int
 	@returns: the number of items in dictionary 
 	"""
-	def size(self):
-		return self.size
 
 	"""splits the dictionary at the i'th index
 
@@ -348,8 +354,33 @@ class AVLTree(object):
 	dictionary larger than node.key.
 	"""
 	def split(self, node):
-		#update size
-		return None
+		x = self.root
+		stackSmall = []
+		sackbig = []
+		while not x == null:
+			if node.get_key() > x.get_key():
+				stackSmall.push(x)
+				x = x.get_right()
+			if node.get_key() < x.get_key():
+				stackBig.push(x)
+				x = x.get_left()
+			if node.get_key() == x.get_key():
+				stackSmall.push(x.get_left())
+				stackBig.push(x.get_right())
+				x = None    # Exit the while
+
+		min = stackBig.pop()
+		while stackBig is not empty:
+			tmp = stackBig.pop()
+			min.join(tmp.get_right(), tmp.get_key(), tmp.get_value())
+
+		max = stackSmall.pop()
+		while stackSmall is not empty:
+			tmp = stackSmall.pop()
+			max.join(tmp.get_left(), tmp.get_key(), tmp.get_value())
+
+
+		return [min, max]
 
 	
 	"""joins self with key and another AVLTree
@@ -365,8 +396,13 @@ class AVLTree(object):
 	@returns: the absolute value of the difference between the height of the AVL trees joined
 	"""
 	def join(self, tree2, key, val):
-		self.size += tree2.size + 1
-		return None
+		self.size += tree2.get_size() + 1
+		r = Math.ABS(tree2.root.get_height()-self.root.get_height())+1
+		
+
+
+		self.fix_tree(node, after_insert=True)
+		return r
 
 
 	"""returns the root of the tree representing the dictionary
