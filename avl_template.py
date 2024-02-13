@@ -84,7 +84,20 @@ class AVLNode(object):
 	@returns: the height of self, -1 if the node is virtual
 	"""
 	def get_height(self):
-		return self.height
+		return get_height_req(self)
+
+
+	def get_height_req(self,node):
+		if(node == null):
+			return -1
+		r=0
+		l=0
+		if(node.get_right() != null):
+			r = get_height_req(self,node.get_right())
+		if (node.get_left() != null):
+			l = get_height_req(self, node.get_left())
+		return r+l
+
 
 	"""returns the Balance Factor
 
@@ -170,7 +183,7 @@ class AVLNode(object):
 	@returns: False if self is a virtual node, True otherwise.
 	"""
 	def is_real_node(self):
-		return False
+		return self.key == None
 
 
 
@@ -354,6 +367,7 @@ class AVLTree(object):
 	dictionary larger than node.key.
 	"""
 	def split(self, node):
+		tmp = null
 		x = self.root
 		stackSmall = []
 		sackbig = []
@@ -369,18 +383,19 @@ class AVLTree(object):
 				stackBig.push(x.get_right())
 				x = None    # Exit the while
 
-		min = stackBig.pop()
+		minT = stackBig.pop()
 		while stackBig is not empty:
 			tmp = stackBig.pop()
-			min.join(tmp.get_right(), tmp.get_key(), tmp.get_value())
-
-		max = stackSmall.pop()
+			minT.join(tmp.get_right(), tmp.get_key(), tmp.get_value())
+		if tmp != null:
+			minT.fix_tree(tmp, after_insert=false)
+		maxT = stackSmall.pop()
 		while stackSmall is not empty:
 			tmp = stackSmall.pop()
-			max.join(tmp.get_left(), tmp.get_key(), tmp.get_value())
-
-
-		return [min, max]
+			maxT.join(tmp.get_left(), tmp.get_key(), tmp.get_value())
+		if tmp != null:
+			maxT.fix_tree(tmp, after_insert=false)
+		return [minT, maxT]
 
 	
 	"""joins self with key and another AVLTree
@@ -398,10 +413,31 @@ class AVLTree(object):
 	def join(self, tree2, key, val):
 		self.size += tree2.get_size() + 1
 		r = Math.ABS(tree2.root.get_height()-self.root.get_height())+1
-		
+		x = AVLNode(key, val)
+		if tree2.root.get_height() > self.root.get_height():
+				T1 = self
+				T2 = tree2
+		else:
+			T1 = tree2
+			T2 = self
+		if T2.root.get_key() > key:  ## then its like the lecturer
+			b = T2.get_root()
+			h = T1.get_root().get_height()
+			c = b
+			while b.get_height() > h:
+				c = b
+				b = b.get_left()
+			x.set_left(T1)
+			x.set_right(b)
+			c.set_right(x)
+			self.root = T2.root
+		else:               ## T2<x<T1
+			x.set_left(T2.get_root())
+			x.set_right(T1)
+			self.root = x
 
+		self.fix_tree(x, after_insert=false)
 
-		self.fix_tree(node, after_insert=True)
 		return r
 
 
