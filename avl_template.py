@@ -232,14 +232,25 @@ class AVLTree(object):
     def search(self, key):
         return self.req_search(key, self.root)
 
+    def connect_to_tree(self, node, new_parent):
+        if new_parent is not None:
+            node.parent = new_parent
+            if node.get_value() > new_parent.get_value():
+                new_parent.set_right(node)
+            else:
+                new_parent.set_left(node)
+        else:
+            self.root = node
+        return
+
     def l_rotate(self, node):
         if node is not None:
             parent = node.get_parent()
             new_root = node.get_right()
-            new_root.parent = parent
             child_to_move = new_root.get_left()
             node.set_right(child_to_move)
             new_root.set_left(node)
+            self.connect_to_tree(new_root, parent)
             # update heights
             return 1
 
