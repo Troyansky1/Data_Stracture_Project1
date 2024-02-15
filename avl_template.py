@@ -107,10 +107,7 @@ class AVLNode(object):
 	"""
 
     def set_left(self, node):
-        if self.left is None:
-            self.left = node
-        else:
-            print("problem with set left")
+        self.left = node
         return None
 
     """sets right child
@@ -120,10 +117,7 @@ class AVLNode(object):
 	"""
 
     def set_right(self, node):
-        if self.right is None:
-            self.right = node
-        else:
-            print("problem with set right")
+        self.right = node
         return None
 
     """sets parent
@@ -304,9 +298,10 @@ class AVLTree(object):
             if abs(parent.get_BF()) == 2:
                 rotate_func = self.get_rotate_func(parent)
                 num_actions += rotate_func(parent)
-            elif parent.get_height() == last_height:
                 if after_insert:
                     return num_actions
+            elif parent.get_BF() == 0:
+                return num_actions
             parent = parent.get_parent()
         return num_actions
 
