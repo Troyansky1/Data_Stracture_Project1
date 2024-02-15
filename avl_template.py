@@ -85,18 +85,9 @@ class AVLNode(object):
 	"""
 
     def get_height(self):
-        return self.get_height_req(self)
+        return self.height
 
-    def get_height_req(self, node):
-        if node is None:
-            return -1
-        r = 0
-        l = 0
-        if node.get_right() is not None:
-            r = self.get_height_req(self, node.get_right())
-        if node.get_left() is not None:
-            l = self.get_height_req(self, node.get_left())
-        return r + l
+
 
     """returns the Balance Factor
 
@@ -166,7 +157,18 @@ class AVLNode(object):
         return None
 
     def recalc_height(self):
-        self.height = max(self.get_left().get_height(), self.get_right().get_height())
+
+        right_height = 0
+        left_height = 0
+        if self.get_right() is not None:
+            self.get_right().recalc_height()
+            right_height = self.get_right().get_height()
+        if self.get_left() is not None:
+            self.get_left().recalc_height()
+            left_height = self.get_left().get_height()
+        self.set_height(max(right_height, left_height))
+        return
+
 
     """sets the height of the node
 
@@ -276,7 +278,7 @@ class AVLTree(object):
         parent = node.get_parent()
         while parent is not None:
             last_height = parent.get_height()
-            parent.set_height()
+            parent.recalc_height()
             if abs(parent.get_BF()) == 2:
                 rotate_func = self.get_rotate_func(parent)
                 num_actions += rotate_func()
@@ -315,7 +317,10 @@ class AVLTree(object):
 
     def insert(self, key, val):
         node = AVLNode(key, val)
-        self.req_insert(node, self.root)
+        if self.root is None:
+            self.root = node
+        else:
+            self.req_insert(node, self.root)
         self.size += 1
         return self.fix_tree(node, after_insert=True)
 
