@@ -258,10 +258,10 @@ class AVLTree(object):
         if node is not None:
             parent = node.get_parent()
             new_root = node.get_left()
-            new_root.parent = parent
             child_to_move = new_root.get_right()
             node.set_left(child_to_move)
             new_root.set_right(node)
+            self.connect_to_tree(new_root, parent)
             # update heights
             return 1
 
