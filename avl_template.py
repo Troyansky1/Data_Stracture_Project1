@@ -306,10 +306,10 @@ class AVLTree(object):
         num_actions = 0
         parent = node.get_parent()
         while parent is not None:
-            last_height = parent.get_height()
             parent.recalc_height()
             if abs(parent.get_BF()) == 2:
                 rotate_func = self.get_rotate_func(parent)
+                print(rotate_func.__name__, "after insert node", node.get_value())
                 num_actions += rotate_func(parent)
                 if after_insert:
                     return num_actions

@@ -10,14 +10,14 @@ def print_avl_tree(root, prefix="", is_left=True):
         bf_str = " BF:" + str(root.get_BF())
         height_str = " Height:" + str(root.get_height())
 
-        print(prefix + ("|-- " if is_left else "\\-- ") + key_str + bf_str)
+        print(prefix + ("|-- " if is_left else "\\-- ") + key_str + bf_str + height_str)
         print_avl_tree(root.left, prefix + ("|   " if is_left else "    "), True)
         print_avl_tree(root.right, prefix + ("|   " if is_left else "    "), False)
 
 
 def test_avl_template():
     def test1():
-        for i in range(3):
+        for i in range(6):
             avl.insert(i, i)
         print_avl_tree(avl.get_root())
 
