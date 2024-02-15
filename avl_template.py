@@ -249,9 +249,10 @@ class AVLTree(object):
             new_root = node.get_right()
             child_to_move = new_root.get_left()
             node.set_right(child_to_move)
+            node.recalc_height()
             new_root.set_left(node)
+            new_root.recalc_height()
             self.connect_to_tree(new_root, parent)
-            # update heights
             return 1
 
     def r_rotate(self, node):
@@ -260,9 +261,10 @@ class AVLTree(object):
             new_root = node.get_left()
             child_to_move = new_root.get_right()
             node.set_left(child_to_move)
+            node.recalc_height()
             new_root.set_right(node)
+            new_root.recalc_height()
             self.connect_to_tree(new_root, parent)
-            # update heights
             return 1
 
     def l_r_rotate(self, node):
