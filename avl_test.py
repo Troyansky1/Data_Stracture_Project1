@@ -6,7 +6,11 @@ import avl_template
 
 def print_avl_tree(root, prefix="", is_left=True):
     if root is not None:
-        print(prefix + ("|-- " if is_left else "\\-- ") +"KEY:" + str(root.key) + " BF:" + str(root.get_BF()))
+        key_str = "KEY:" + str(root.key)
+        bf_str = " BF:" + str(root.get_BF())
+        height_str = "Height:" + str(root.get_height())
+
+        print(prefix + ("|-- " if is_left else "\\-- ") + key_str + bf_str + height_str)
         print_avl_tree(root.left, prefix + ("|   " if is_left else "    "), True)
         print_avl_tree(root.right, prefix + ("|   " if is_left else "    "), False)
 

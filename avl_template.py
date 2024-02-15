@@ -157,16 +157,25 @@ class AVLNode(object):
         return None
 
     def recalc_height(self):
+        right_height = -2
+        left_height = -2
+        if self.get_right() is not None:
+            right_height = self.get_right().get_height()
+        if self.get_left() is not None:
+            left_height = self.get_left().get_height()
+        self.set_height(max(right_height, left_height) + 1)
+        return
 
+    def recalc_height_req(self):
         right_height = 0
         left_height = 0
         if self.get_right() is not None:
-            self.get_right().recalc_height()
+            self.get_right().recalc_height_req()
             right_height = self.get_right().get_height()
         if self.get_left() is not None:
-            self.get_left().recalc_height()
+            self.get_left().recalc_height_req()
             left_height = self.get_left().get_height()
-        self.set_height(max(right_height, left_height))
+        self.set_height(max(right_height, left_height) + 1)
         return
 
 
@@ -263,15 +272,28 @@ class AVLTree(object):
 
     # TODO double check this, it's very confusing :)
     def get_rotate_func(self, node):
+        right = node.get_right()
+        right_bf = 0
+        left = node.get_left()
+        left_bf = 0
+        if right is not None:
+            right_bf = right.get_BF()
+        if left is not None:
+            left_bf = left.get_BF()
+
         if node is not None:
-            if node.get_BF() == -2 and (node.get_right.get_BF() == -1 or node.get_left.get_BF() == 0):
-                return self.l_rotate
-            elif node.get_BF() == -2 and (node.get_right.get_BF() == 1):
-                return self.r_l_rotate
-            elif node.get_BF() == 2 and (node.get_left.get_BF() == 1 or node.get_right.get_BF() == 0):
-                return self.r_rotate
-            elif node.get_BF() == 2 and (node.get_left.get_BF() == -1):
-                return self.r_l_rotate
+            if node.get_BF() == -2:
+                if right_bf == -1 or left_bf == 0:
+                    return self.l_rotate
+                if right_bf == 1:
+                    return self.r_l_rotate
+
+            elif node.get_BF() == 2:
+                if left_bf == 1 or right_bf == 0:
+                    return self.r_rotate
+                if left_bf == -1:
+                    return self.r_l_rotate
+        return None
 
     def fix_tree(self, node, after_insert):
         num_actions = 0
@@ -281,7 +303,7 @@ class AVLTree(object):
             parent.recalc_height()
             if abs(parent.get_BF()) == 2:
                 rotate_func = self.get_rotate_func(parent)
-                num_actions += rotate_func()
+                num_actions += rotate_func(parent)
             elif parent.get_height() == last_height:
                 if after_insert:
                     return num_actions
@@ -293,16 +315,22 @@ class AVLTree(object):
             if root.get_right() is None:
                 root.set_right(node)
                 node.set_parent(root)
+                root.set_height(root.get_height()+1)
                 return
             else:
                 self.req_insert(node, root.get_right())
+                root.recalc_height()
+
+
         elif node.get_value() < root.get_value():
             if root.get_left() is None:
                 root.set_left(node)
+                root.set_height(root.get_height() + 1)
                 node.set_parent(root)
                 return
             else:
                 self.req_insert(node, root.get_left())
+                root.recalc_height()
 
     """inserts val at position i in the dictionary
 
