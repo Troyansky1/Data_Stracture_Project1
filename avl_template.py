@@ -373,24 +373,24 @@ class AVLTree(object):
         stackBig = []
         while x is not None:
             if node.get_key() > x.get_key():
-                stackSmall.push(x)
+                stackSmall.append(x)
                 x = x.get_right()
             if node.get_key() < x.get_key():
-                stackBig.push(x)
+                stackBig.append(x)
                 x = x.get_left()
             if node.get_key() == x.get_key():
-                stackSmall.push(x.get_left())
-                stackBig.push(x.get_right())
+                stackSmall.append(x.get_left())
+                stackBig.append(x.get_right())
                 x = None  # Exit the while
 
         minT = stackBig.pop()
-        while stackBig is not empty:
+        while len(stackBig) != 0:
             tmp = stackBig.pop()
             minT.join(tmp.get_right(), tmp.get_key(), tmp.get_value())
-        if tmp is not  None:
+        if tmp is not None:
             minT.fix_tree(tmp, after_insert=False)
         maxT = stackSmall.pop()
-        while stackSmall is not empty:
+        while len(stackSmall) != 0:
             tmp = stackSmall.pop()
             maxT.join(tmp.get_left(), tmp.get_key(), tmp.get_value())
         if tmp is not None:
