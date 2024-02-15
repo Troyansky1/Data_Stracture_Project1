@@ -96,8 +96,8 @@ class AVLNode(object):
 	"""
 
     def get_BF(self):
-        height_right = -1 if self.get_right() is None else self.get_right().get_height()
-        height_left = -1 if self.get_left() is None else self.get_left().get_height()
+        height_right = -2 if self.get_right() is None else self.get_right().get_height()
+        height_left = -2 if self.get_left() is None else self.get_left().get_height()
         return height_left - height_right
 
     """sets left child
@@ -320,7 +320,6 @@ class AVLTree(object):
             else:
                 self.req_insert(node, root.get_right())
                 root.recalc_height()
-
 
         elif node.get_value() < root.get_value():
             if root.get_left() is None:
