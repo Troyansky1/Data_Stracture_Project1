@@ -23,6 +23,9 @@ def test_avl_template():
 
         print_avl_tree(avl.get_root())
         print("\n")
+        node = avl.search(7)
+        avl.delete(node)
+        print_avl_tree(avl.get_root())
 
     def test2():
         nums_in_tree = []

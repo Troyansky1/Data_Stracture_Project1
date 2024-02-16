@@ -230,7 +230,7 @@ class AVLTree(object):
         return self.size
 
     def search(self, key):
-        return self.req_search(key, self.root)
+        return self.req_search(self.root, key)
 
     def connect_to_parent(self, node, new_parent):
         node.parent = new_parent
@@ -397,23 +397,22 @@ class AVLTree(object):
         parent = node.get_parent()
         right = node.get_right()
         left = node.get_left()
+        num_actions = 0
         if right is None and left is None:
             self.disconnect_from_parent(node)
-            self.fix_tree(parent, False)
+            num_actions = self.fix_tree(parent, False)
         elif left is None and right is not None:
             self.connect_to_parent(right, parent)
-            self.fix_tree(parent, False)
+            num_actions = self.fix_tree(parent, False)
         elif left is not None and right is None:
             self.connect_to_parent(left, parent)
-            self.fix_tree(parent, False)
+            num_actions = self.fix_tree(parent, False)
         else:
             min_successor = self.get_min_node(right)
             self.replace_nodes(node, min_successor)
             self.connect_to_parent(min_successor.get_right(), min_successor.get_parent())
-            self.fix_tree(min_successor.get_right(), False)
-
-
-        return -1
+            num_actions = self.fix_tree(min_successor.get_right(), False)
+        return num_actions
 
     def req_avl_to_array(self, node, keys_list):
         if node is not None:
