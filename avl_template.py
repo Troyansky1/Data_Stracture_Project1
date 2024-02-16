@@ -233,8 +233,8 @@ class AVLTree(object):
         return self.req_search(key, self.root)
 
     def connect_to_tree(self, node, new_parent):
+        node.parent = new_parent
         if new_parent is not None:
-            node.parent = new_parent
             if node.get_value() > new_parent.get_value():
                 new_parent.set_right(node)
             else:
@@ -249,8 +249,11 @@ class AVLTree(object):
             new_root = node.get_right()
             child_to_move = new_root.get_left()
             node.set_right(child_to_move)
+            if child_to_move is not None:
+                child_to_move.set_parent(node)
             node.recalc_height()
             new_root.set_left(node)
+            node.set_parent(new_root)
             new_root.recalc_height()
             self.connect_to_tree(new_root, parent)
             return 1
@@ -261,8 +264,11 @@ class AVLTree(object):
             new_root = node.get_left()
             child_to_move = new_root.get_right()
             node.set_left(child_to_move)
+            if child_to_move is not None:
+                child_to_move.set_parent(node)
             node.recalc_height()
             new_root.set_right(node)
+            node.set_parent(new_root)
             new_root.recalc_height()
             self.connect_to_tree(new_root, parent)
             return 1
@@ -309,7 +315,7 @@ class AVLTree(object):
             parent.recalc_height()
             if abs(parent.get_BF()) == 2:
                 rotate_func = self.get_rotate_func(parent)
-                print(rotate_func.__name__, "after insert node", node.get_value())
+                print(rotate_func.__name__, "after insert node", node.get_value(), "parent is", parent.get_value())
                 num_actions += rotate_func(parent)
                 if after_insert:
                     return num_actions
@@ -338,6 +344,8 @@ class AVLTree(object):
             else:
                 self.req_insert(node, root.get_left())
                 root.recalc_height()
+        return
+
 
     """inserts val at position i in the dictionary
 

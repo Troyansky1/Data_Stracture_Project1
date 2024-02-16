@@ -15,11 +15,14 @@ def print_avl_tree(root, prefix="", is_left=True):
         print_avl_tree(root.right, prefix + ("|   " if is_left else "    "), False)
 
 
+
 def test_avl_template():
     def test1():
-        for i in range(6):
+        for i in range(10):
             avl.insert(i, i)
+
         print_avl_tree(avl.get_root())
+        print("\n")
 
     def test2():
         nums_in_tree = []
@@ -29,6 +32,7 @@ def test_avl_template():
             if num not in nums_in_tree:
                 avl.insert(num, num)
         print_avl_tree(avl.get_root())
+        print("\n")
 
         for i in range(10):
             num = random.choice(nums_in_tree)
@@ -37,7 +41,8 @@ def test_avl_template():
 
 
     avl = avl_template.AVLTree()
-    test1()
+    #test1()
+    test2()
 
 if __name__ == '__main__':
     test_avl_template()
