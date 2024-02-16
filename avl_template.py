@@ -24,13 +24,20 @@ class AVLNode(object):
         self.parent = None
         self.height = -1
 
+        if key is not None:
+            self.height = 0
+            self.left = AVLNode(None, None)
+            self.right = AVLNode(None, None)
+
     """returns the left child
     @rtype: AVLNode
     @returns: the left child of self, None if there is no left child (if self is virtual)
     """
 
     def get_left(self):
-        return self.left
+        if self.is_real_node():
+            return self.left
+        return None
 
     """returns the right child
 
@@ -39,7 +46,9 @@ class AVLNode(object):
     """
 
     def get_right(self):
-        return self.right
+        if self.is_real_node():
+            return self.right
+        return None
 
     """returns the parent 
 
@@ -57,7 +66,9 @@ class AVLNode(object):
     """
 
     def get_key(self):
-        return self.key
+        if self.is_real_node():
+            return self.key
+        return 0
 
     """returns the value
 
@@ -66,7 +77,9 @@ class AVLNode(object):
     """
 
     def get_value(self):
-        return self.value
+        if self.is_real_node():
+            return self.value
+        return None
 
     """returns the height
 
@@ -84,9 +97,11 @@ class AVLNode(object):
     """
 
     def get_bf(self):
-        height_right = -2 if self.get_right() is None else self.get_right().get_height()
-        height_left = -2 if self.get_left() is None else self.get_left().get_height()
-        return height_left - height_right
+        if self.is_real_node():
+            height_right = self.get_right().get_height()
+            height_left = self.get_left().get_height()
+            return height_left - height_right
+        return 0
 
     """sets left child
 
@@ -139,24 +154,18 @@ class AVLNode(object):
         return None
 
     def recalc_height(self):
-        right_height = -2
-        left_height = -2
-        if self.get_right() is not None:
-            right_height = self.get_right().get_height()
-        if self.get_left() is not None:
-            left_height = self.get_left().get_height()
+        right_height = self.get_right().get_height()
+        left_height = self.get_left().get_height()
         self.set_height(max(right_height, left_height) + 1)
         return
 
     def recalc_height_req(self):
         right_height = 0
         left_height = 0
-        if self.get_right() is not None:
-            self.get_right().recalc_height_req()
-            right_height = self.get_right().get_height()
-        if self.get_left() is not None:
-            self.get_left().recalc_height_req()
-            left_height = self.get_left().get_height()
+        self.get_right().recalc_height_req()
+        right_height = self.get_right().get_height()
+        self.get_left().recalc_height_req()
+        left_height = self.get_left().get_height()
         self.set_height(max(right_height, left_height) + 1)
         return
 
@@ -177,24 +186,15 @@ class AVLNode(object):
     """
 
     def is_real_node(self):
-        return self.key == None
+        return self.key is None
 
     def debug_print_node(self):
-        left_val = 0
-        left_bf = 0
-        right_val = 0
-        right_bf = 0
-        left_height = -2
-        right_height = -2
-        if self.get_left() is not None:
-            left_val = self.get_left().get_value()
-            left_bf = self.get_left().get_bf()
-            left_height = self.get_left().get_height()
-        if self.get_right() is not None:
-            right_val = self.get_right().get_value()
-            right_bf = self.get_right().get_bf()
-            right_height = self.get_right().get_height()
-
+        left_val = self.get_left().get_value()
+        left_bf = self.get_left().get_bf()
+        left_height = self.get_left().get_height()
+        right_val = self.get_right().get_value()
+        right_bf = self.get_right().get_bf()
+        right_height = self.get_right().get_height()
         print("node:", "value:", self.get_value(), "bf:", self.get_bf(), "Height:", self.get_height())
         print("  right:", "value:", right_val, "bf:", right_bf, "height:", right_height, "")
         print("  left:", "value:", left_val, "bf:", left_bf, "height:", left_height, "")
@@ -216,7 +216,7 @@ class AVLTree(object):
         self.root = None
         self.size = 0
 
-    def req_search(self, node, key):  # not sure if self needed
+    def req_search(self, node, key):
         if node is not None:
             if node.key == key:
                 return node
@@ -241,23 +241,22 @@ class AVLTree(object):
         return self.req_search(self.root, key)
 
     def connect_to_parent(self, node, new_parent):
-        if node is not None:
-            node.set_parent(new_parent)
-            if new_parent is not None:
-                if node.get_key() > new_parent.get_key():
-                    new_parent.set_right(node)
-                else:
-                    new_parent.set_left(node)
+        node.set_parent(new_parent)
+        if new_parent is not None:
+            if node.get_key() > new_parent.get_key():
+                new_parent.set_right(node)
             else:
-                self.root = node
+                new_parent.set_left(node)
+        else:
+            self.root = node
         return
 
     def disconnect_from_parent(self, node):
         parent = node.get_parent()
         if node.get_key() > parent.get_key():
-            parent.set_right(None)
+            parent.set_right(AVLNode(None, None))
         else:
-            parent.set_left(None)
+            parent.set_left(AVLNode(None, None))
 
     def l_rotate(self, node):
         if node is not None:
@@ -265,8 +264,7 @@ class AVLTree(object):
             new_root = node.get_right()
             child_to_move = new_root.get_left()
             node.set_right(child_to_move)
-            if child_to_move is not None:
-                child_to_move.set_parent(node)
+            child_to_move.set_parent(node)
             node.recalc_height()
             new_root.set_left(node)
             node.set_parent(new_root)
@@ -280,8 +278,7 @@ class AVLTree(object):
             new_root = node.get_left()
             child_to_move = new_root.get_right()
             node.set_left(child_to_move)
-            if child_to_move is not None:
-                child_to_move.set_parent(node)
+            child_to_move.set_parent(node)
             node.recalc_height()
             new_root.set_right(node)
             node.set_parent(new_root)
@@ -305,10 +302,8 @@ class AVLTree(object):
         right_bf = 0
         left = node.get_left()
         left_bf = 0
-        if right is not None:
-            right_bf = right.get_bf()
-        if left is not None:
-            left_bf = left.get_bf()
+        right_bf = right.get_bf()
+        left_bf = left.get_bf()
 
         if node is not None:
             if node.get_bf() == -2:
@@ -341,7 +336,7 @@ class AVLTree(object):
 
     def req_insert(self, node, root):
         if node.get_key() > root.get_key():
-            if root.get_right() is None:
+            if not root.get_right().is_real_node():
                 root.set_right(node)
                 node.set_parent(root)
                 root.set_height(root.get_height()+1)
@@ -351,7 +346,7 @@ class AVLTree(object):
                 root.recalc_height()
 
         elif node.get_key() < root.get_key():
-            if root.get_left() is None:
+            if not root.get_left().is_real_node():
                 root.set_left(node)
                 root.set_height(root.get_height() + 1)
                 node.set_parent(root)
@@ -388,7 +383,7 @@ class AVLTree(object):
 
     def get_min_node(self, root):
         min_node = root
-        while min_node.get_left() is not None:  # Find minimum in right subtree
+        while not min_node.get_left().is_real_node():  # Find minimum in right subtree
             min_node = min_node.get_left()
         return min_node
 
@@ -406,27 +401,27 @@ class AVLTree(object):
         right = node.get_right()
         left = node.get_left()
         num_actions = 0
-        if right is None and left is None:
+        if not right.is_real_node() and not left.is_real_node():
             self.disconnect_from_parent(node)
             num_actions = self.fix_tree(parent, False)
-        elif left is None and right is not None:
+        elif not left.is_real_node() and right.is_real_node():
             self.connect_to_parent(right, parent)
             num_actions = self.fix_tree(parent, False)
-        elif left is not None and right is None:
+        elif left.is_real_node() and not right.is_real_node():
             self.connect_to_parent(left, parent)
             num_actions = self.fix_tree(parent, False)
         else:
             min_successor = self.get_min_node(right)
             self.replace_nodes(node, min_successor)
-            if min_successor.get_right() is not None:
+            if min_successor.get_right().is_real_node():
                 self.connect_to_parent(min_successor.get_right(), min_successor.get_parent())
             else:
-                min_successor.get_parent().set_left(None)
+                min_successor.get_parent().set_left(AVLNode(None, None))
             num_actions = self.fix_tree(min_successor.get_right(), False)
         return num_actions
 
     def req_avl_to_array(self, node, keys_list):
-        if node is not None:
+        if node.is_real_node():
             self.req_avl_to_array(node.get_left, keys_list)
             keys_list.append({node.get_key(), node.get_key})
             self.req_avl_to_array(node.get_right, keys_list)

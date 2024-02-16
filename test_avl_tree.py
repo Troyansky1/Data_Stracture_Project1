@@ -1,8 +1,8 @@
 import unittest
-
+import avl_template
 import pytest
 
-from AVLTtree import AVLNode, AVLTree
+from avl_template import AVLNode, AVLTree
 
 AVLNode.__eq__ = lambda self, other: self.key == other.key and self.value == other.value
 AVLNode.__bool__ = lambda self: self.is_real_node()
@@ -62,7 +62,7 @@ def assert_valid_avl(tree: AVLTree):
 
 def test_is_valid_bst_given_valid_tree_returns_true():
     tree = build_sample_avl()
-
+    # print(is_valid_bst(tree.root))
     assert is_valid_bst(tree.root) is True
 
 
