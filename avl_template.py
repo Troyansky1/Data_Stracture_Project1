@@ -232,7 +232,7 @@ class AVLTree(object):
     def search(self, key):
         return self.req_search(key, self.root)
 
-    def connect_to_tree(self, node, new_parent):
+    def connect_to_parent(self, node, new_parent):
         node.parent = new_parent
         if new_parent is not None:
             if node.get_key() > new_parent.get_key():
@@ -242,6 +242,13 @@ class AVLTree(object):
         else:
             self.root = node
         return
+
+    def disconnect_from_parent(self, node):
+        parent = node.get_parent()
+        if node.get_key() > parent.get_key():
+            parent.set_right(None)
+        else:
+            parent.set_left(None)
 
     def l_rotate(self, node):
         if node is not None:
@@ -255,7 +262,7 @@ class AVLTree(object):
             new_root.set_left(node)
             node.set_parent(new_root)
             new_root.recalc_height()
-            self.connect_to_tree(new_root, parent)
+            self.connect_to_parent(new_root, parent)
             return 1
 
     def r_rotate(self, node):
@@ -270,7 +277,7 @@ class AVLTree(object):
             new_root.set_right(node)
             node.set_parent(new_root)
             new_root.recalc_height()
-            self.connect_to_tree(new_root, parent)
+            self.connect_to_parent(new_root, parent)
             return 1
 
     def l_r_rotate(self, node):
@@ -308,9 +315,8 @@ class AVLTree(object):
                     return self.r_l_rotate
         return None
 
-    def fix_tree(self, node, after_insert):
+    def fix_tree(self, parent, after_insert):
         num_actions = 0
-        parent = node.get_parent()
         while parent is not None:
             parent.recalc_height()
             if abs(parent.get_BF()) == 2:
@@ -365,7 +371,18 @@ class AVLTree(object):
         else:
             self.req_insert(node, self.root)
         self.size += 1
-        return self.fix_tree(node, after_insert=True)
+        return self.fix_tree(node.get_parent(), after_insert=True)
+
+
+    def replace_nodes(self, old_node, new_node):
+        old_node.set_value(new_node.get_value())
+        old_node.set_key(new_node.get_key())
+
+    def get_min_node(self, root):
+        min_node = root
+        while min_node.get_left() is not None:  # Find minimum in right subtree
+            min_node = min_node.get_left()
+        return min_node
 
     """deletes node from the dictionary
 
@@ -377,6 +394,25 @@ class AVLTree(object):
 
     def delete(self, node):
         self.size -= 1
+        parent = node.get_parent()
+        right = node.get_right()
+        left = node.get_left()
+        if right is None and left is None:
+            self.disconnect_from_parent(node)
+            self.fix_tree(parent, False)
+        elif left is None and right is not None:
+            self.connect_to_parent(right, parent)
+            self.fix_tree(parent, False)
+        elif left is not None and right is None:
+            self.connect_to_parent(left, parent)
+            self.fix_tree(parent, False)
+        else:
+            min_successor = self.get_min_node(right)
+            self.replace_nodes(node, min_successor)
+            self.connect_to_parent(min_successor.get_right(), min_successor.get_parent())
+            self.fix_tree(min_successor.get_right(), False)
+
+
         return -1
 
     def req_avl_to_array(self, node, keys_list):
