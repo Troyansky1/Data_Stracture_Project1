@@ -101,7 +101,7 @@ class AVLNode(object):
             height_right = self.get_right().get_height()
             height_left = self.get_left().get_height()
             return height_left - height_right
-        return 0
+        return -1
 
     """sets left child
 
@@ -186,7 +186,9 @@ class AVLNode(object):
     """
 
     def is_real_node(self):
-        return self.key is None
+        if self.key is None:
+            return False
+        return True
 
     def debug_print_node(self):
         left_val = self.get_left().get_value()
@@ -208,7 +210,7 @@ A class implementing the ADT Dictionary, using an AVL tree.
 
 class AVLTree(object):
     """
-    Constructor, you are allowed to add more fields.  
+    Constructor, you are allowed to add more fields.
 
     """
 
@@ -218,13 +220,16 @@ class AVLTree(object):
 
     def req_search(self, node, key):
         if node is not None:
-            if node.key == key:
-                return node
-            elif node.key < key:
-                return self.req_search(node.get_right(), key)
-            else:
-                return self.req_search(node.get_left(), key)
+            if node.get_key() is not None:
+                if node.get_key() == key:
+                    return node
+                elif node.get_key() < key:
+                    return self.req_search(node.get_right(), key)
+                else:
+                    return self.req_search(node.get_left(), key)
         return None
+
+
 
     """searches for a AVLNode in the dictionary corresponding to the key
 
