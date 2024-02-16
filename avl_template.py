@@ -388,7 +388,7 @@ class AVLTree(object):
 
     def get_min_node(self, root):
         min_node = root
-        while not min_node.get_left().is_real_node():  # Find minimum in right subtree
+        while min_node.get_left().is_real_node():  # Find minimum in right subtree
             min_node = min_node.get_left()
         return min_node
 
@@ -421,7 +421,10 @@ class AVLTree(object):
             if min_successor.get_right().is_real_node():
                 self.connect_to_parent(min_successor.get_right(), min_successor.get_parent())
             else:
-                min_successor.get_parent().set_left(AVLNode(None, None))
+                if min_successor.get_parent().get_right() is min_successor:
+                    min_successor.get_parent().set_right(AVLNode(None, None))
+                else:
+                    min_successor.get_parent().set_left(AVLNode(None, None))
             num_actions = self.fix_tree(min_successor.get_right(), False)
         return num_actions
 
