@@ -193,6 +193,28 @@ class AVLNode(object):
         return self.key == None
 
 
+    def debug_print_node(self):
+        left_val = 0
+        left_BF = 0
+        right_val = 0
+        right_BF = 0
+        left_height = -2
+        right_height = -2
+        if self.get_left() is not None:
+            left_val = self.get_left().get_value()
+            left_BF = self.get_left().get_BF()
+            left_height = self.get_left().get_height()
+        if self.get_right() is not None:
+            right_val = self.get_right().get_value()
+            right_BF = self.get_right().get_BF()
+            right_height = self.get_right().get_height()
+
+        print("node:", "value:", self.get_value(), "BF:", self.get_BF(), "Height:", self.get_height())
+        print("  right:", "value:", right_val, "BF:", right_BF, "height:", right_height, "")
+        print("  left:", "value:", left_val, "BF:", left_BF, "height:", left_height, "")
+
+
+
 """
 A class implementing the ADT Dictionary, using an AVL tree.
 """
@@ -233,14 +255,15 @@ class AVLTree(object):
         return self.req_search(self.root, key)
 
     def connect_to_parent(self, node, new_parent):
-        node.parent = new_parent
-        if new_parent is not None:
-            if node.get_key() > new_parent.get_key():
-                new_parent.set_right(node)
+        if node is not None:
+            node.set_parent(new_parent)
+            if new_parent is not None:
+                if node.get_key() > new_parent.get_key():
+                    new_parent.set_right(node)
+                else:
+                    new_parent.set_left(node)
             else:
-                new_parent.set_left(node)
-        else:
-            self.root = node
+                self.root = node
         return
 
     def disconnect_from_parent(self, node):
@@ -281,12 +304,12 @@ class AVLTree(object):
             return 1
 
     def l_r_rotate(self, node):
-        self.l_rotate(node.get_left)
+        self.l_rotate(node.get_left())
         self.r_rotate(node)
         return 2
 
     def r_l_rotate(self, node):
-        self.r_rotate(node.get_right)
+        self.r_rotate(node.get_right())
         self.l_rotate(node)
         return 2
 
@@ -303,31 +326,31 @@ class AVLTree(object):
 
         if node is not None:
             if node.get_BF() == -2:
-                if right_bf == -1 or left_bf == 0:
-                    return self.l_rotate
                 if right_bf == 1:
                     return self.r_l_rotate
+                if right_bf == -1 or left_bf == 0:
+                    return self.l_rotate
 
             elif node.get_BF() == 2:
+                if left_bf == -1:
+                    return self.l_r_rotate
                 if left_bf == 1 or right_bf == 0:
                     return self.r_rotate
-                if left_bf == -1:
-                    return self.r_l_rotate
+
+        node.debug_print_node()
         return None
 
-    def fix_tree(self, parent, after_insert):
+    def fix_tree(self, node, after_insert):
         num_actions = 0
-        while parent is not None:
-            parent.recalc_height()
-            if abs(parent.get_BF()) == 2:
-                rotate_func = self.get_rotate_func(parent)
-                #print(rotate_func.__name__, "after insert node", node.get_key(), "parent is", parent.get_key())
-                num_actions += rotate_func(parent)
-                if after_insert:
-                    return num_actions
-            elif parent.get_BF() == 0:
-                return num_actions
-            parent = parent.get_parent()
+        while node is not None:
+            node.recalc_height()
+            parent = node.get_parent()
+            if abs(node.get_BF()) == 2:
+                rotate_func = self.get_rotate_func(node)
+                # print(rotate_func.__name__, "parent is", parent.get_key())
+                num_actions += rotate_func(node)
+            node = parent
+
         return num_actions
 
     def req_insert(self, node, root):
@@ -410,7 +433,10 @@ class AVLTree(object):
         else:
             min_successor = self.get_min_node(right)
             self.replace_nodes(node, min_successor)
-            self.connect_to_parent(min_successor.get_right(), min_successor.get_parent())
+            if min_successor.get_right() is not None:
+                self.connect_to_parent(min_successor.get_right(), min_successor.get_parent())
+            else:
+                min_successor.get_parent().set_left(None)
             num_actions = self.fix_tree(min_successor.get_right(), False)
         return num_actions
 
