@@ -235,7 +235,7 @@ class AVLTree(object):
     def connect_to_tree(self, node, new_parent):
         node.parent = new_parent
         if new_parent is not None:
-            if node.get_value() > new_parent.get_value():
+            if node.get_key() > new_parent.get_key():
                 new_parent.set_right(node)
             else:
                 new_parent.set_left(node)
@@ -315,7 +315,7 @@ class AVLTree(object):
             parent.recalc_height()
             if abs(parent.get_BF()) == 2:
                 rotate_func = self.get_rotate_func(parent)
-                print(rotate_func.__name__, "after insert node", node.get_value(), "parent is", parent.get_value())
+                #print(rotate_func.__name__, "after insert node", node.get_key(), "parent is", parent.get_key())
                 num_actions += rotate_func(parent)
                 if after_insert:
                     return num_actions
@@ -325,7 +325,7 @@ class AVLTree(object):
         return num_actions
 
     def req_insert(self, node, root):
-        if node.get_value() > root.get_value():
+        if node.get_key() > root.get_key():
             if root.get_right() is None:
                 root.set_right(node)
                 node.set_parent(root)
@@ -335,7 +335,7 @@ class AVLTree(object):
                 self.req_insert(node, root.get_right())
                 root.recalc_height()
 
-        elif node.get_value() < root.get_value():
+        elif node.get_key() < root.get_key():
             if root.get_left() is None:
                 root.set_left(node)
                 root.set_height(root.get_height() + 1)
@@ -382,7 +382,7 @@ class AVLTree(object):
     def req_avl_to_array(self, node, keys_list):
         if node is not None:
             self.req_avl_to_array(self, node.get_left, keys_list)
-            keys_list.append({node.get_key(), node.get_value})
+            keys_list.append({node.get_key(), node.get_key})
             self.req_avl_to_array(self, node.get_right, keys_list)
         return
 

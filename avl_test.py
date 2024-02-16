@@ -28,9 +28,9 @@ def test_avl_template():
         nums_in_tree = []
         for i in range(50):
             num = random.randint(0, 100)
-            nums_in_tree.append(num)
             if num not in nums_in_tree:
                 avl.insert(num, num)
+            nums_in_tree.append(num)
         print_avl_tree(avl.get_root())
         print("\n")
 
@@ -41,8 +41,8 @@ def test_avl_template():
 
 
     avl = avl_template.AVLTree()
-    #test1()
-    test2()
+    test1()
+    #test2()
 
 if __name__ == '__main__':
     test_avl_template()
