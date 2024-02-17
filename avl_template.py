@@ -111,6 +111,7 @@ class AVLNode(object):
 
     def set_left(self, node):
         self.left = node
+        node.set_parent(self)
         return None
 
     """sets right child
@@ -121,6 +122,7 @@ class AVLNode(object):
 
     def set_right(self, node):
         self.right = node
+        node.set_parent(self)
         return None
 
     """sets parent
@@ -328,7 +330,7 @@ class AVLTree(object):
 
     def fix_tree(self, node, after_insert):
         num_actions = 0
-        while node is not None:
+        while node is not None and node.is_real_node():
             node.recalc_height()
             parent = node.get_parent()
             if abs(node.get_bf()) == 2:

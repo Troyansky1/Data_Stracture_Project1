@@ -52,7 +52,7 @@ def walk(node: AVLNode):
 def assert_valid_avl(tree: AVLTree):
     nodes_list = walk(tree.root)
     for node in nodes_list:
-        bf = node.balance_factor()
+        bf = node.get_bf()
         if abs(bf) > 1:
             raise AssertionError(f"Found node with illegal BF {bf}!")
 
