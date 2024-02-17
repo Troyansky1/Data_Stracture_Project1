@@ -318,13 +318,13 @@ class AVLTree(object):
             if node.get_bf() == -2:
                 if right_bf == 1:
                     return self.r_l_rotate
-                if right_bf == -1 or left_bf == 0:
+                if right_bf == -1 or right_bf == 0:
                     return self.l_rotate
 
             elif node.get_bf() == 2:
                 if left_bf == -1:
                     return self.l_r_rotate
-                if left_bf == 1 or right_bf == 0:
+                if left_bf == 1 or left_bf == 0:
                     return self.r_rotate
 
         node.debug_print_node()
@@ -398,10 +398,24 @@ class AVLTree(object):
         num_actions += self.fix_tree(node.get_parent(), after_insert=True)
         return num_actions
 
+    """ Takes the values (key and val) from the new node and sets in the place of the old node. Replace in-place.
+
+       @type old_node: AVLNode
+       @param old_node: The old node
+       @type new_node: AVLNode
+       @param new_node: the new node
+       """
     def replace_nodes(self, old_node, new_node):
         old_node.set_value(new_node.get_value())
         old_node.set_key(new_node.get_key())
 
+    """ gets the minimus successor
+
+    @type root: AVLNode
+    @param root: The node from which to search the minimus
+    @rtype: AVLNode
+    @returns: The minimum successor
+    """
     def get_min_node(self, root):
         min_node = root
         while min_node.get_left().is_real_node():  # Find minimum in right subtree
@@ -435,16 +449,12 @@ class AVLTree(object):
             num_actions = self.fix_tree(parent, False)
         # Node to delete has both children
         else:
+            # Replaces with the minimun successor
             min_successor = self.get_min_node(right)
             self.replace_nodes(node, min_successor)
-            if min_successor.get_right().is_real_node():
-                self.connect_to_parent(min_successor.get_right(), min_successor.get_parent())
-            else:
-                if min_successor.get_parent().get_right() is min_successor:
-                    min_successor.get_parent().set_right(AVLNode(None, None))
-                else:
-                    min_successor.get_parent().set_left(AVLNode(None, None))
-            num_actions = self.fix_tree(min_successor, False)
+            # Connect the min successor's successors to the new place.
+            self.connect_to_parent(min_successor.get_right(), min_successor.get_parent())
+            num_actions = self.fix_tree(min_successor.get_parent(), False)
         return num_actions
 
     def req_avl_to_array(self, node, keys_list):

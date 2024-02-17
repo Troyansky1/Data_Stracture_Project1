@@ -81,8 +81,25 @@ def test4():
         num = random.randint(1, 100)
         node = avl.search(num)
         if node is not None:
-            print(avl.delete(node))
+            print(avl.delete(node), node.get_key())
     print(avl.avl_to_array())
+    print_avl_tree(avl.get_root())
+
+
+# Super random, checks for bugs and edge cases
+def test5():
+    print_test(inspect.currentframe().f_code.co_name)
+    avl = avl_template.AVLTree()
+    nums_in_tree = []
+    for i in range(200):
+        num = random.randint(1, 100)
+        if num not in nums_in_tree:
+            avl.insert(num, num)
+            nums_in_tree.append(num)
+        else:
+            node = avl.search(num)
+            if node is not None:
+                avl.delete(node), node.get_key()
     print_avl_tree(avl.get_root())
 
 
@@ -91,6 +108,7 @@ if __name__ == '__main__':
     #test1()
     #test2()
     #test3()
-    test4()
+    #test4()
+    test5()
 
 
