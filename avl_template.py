@@ -165,8 +165,10 @@ class AVLNode(object):
         right_height = self.get_right().get_height()
         left_height = self.get_left().get_height()
         new_height = max(right_height, left_height) + 1
-        self.set_height(new_height)
-        return 1 if new_height != height else 0
+        if new_height != height:
+            self.set_height(new_height)
+            return 1
+        return 0
 
 
 
@@ -419,15 +421,19 @@ class AVLTree(object):
         parent = node.get_parent()
         right = node.get_right()
         left = node.get_left()
+        # Node to delete has no children
         if not right.is_real_node() and not left.is_real_node():
             self.disconnect_from_parent(node)
             num_actions = self.fix_tree(parent, False)
+        # Node to delete has no left child
         elif not left.is_real_node() and right.is_real_node():
             self.connect_to_parent(right, parent)
             num_actions = self.fix_tree(parent, False)
+        # Node to delete has no right child
         elif left.is_real_node() and not right.is_real_node():
             self.connect_to_parent(left, parent)
             num_actions = self.fix_tree(parent, False)
+        # Node to delete has both children
         else:
             min_successor = self.get_min_node(right)
             self.replace_nodes(node, min_successor)
@@ -438,7 +444,7 @@ class AVLTree(object):
                     min_successor.get_parent().set_right(AVLNode(None, None))
                 else:
                     min_successor.get_parent().set_left(AVLNode(None, None))
-            num_actions = self.fix_tree(min_successor.get_right(), False)
+            num_actions = self.fix_tree(min_successor, False)
         return num_actions
 
     def req_avl_to_array(self, node, keys_list):
