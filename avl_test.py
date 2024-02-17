@@ -35,6 +35,7 @@ def test1():
     avl.delete(node)
     node = avl.search(9)
     avl.delete(node)
+    print(avl.avl_to_array())
     print_avl_tree(avl.get_root())
 
 # Insert in reverse order and a few deletes. uses rotations.
@@ -47,6 +48,7 @@ def test2():
     avl.delete(node)
     node = avl.search(9)
     avl.delete(node)
+    print(avl.avl_to_array())
     print_avl_tree(avl.get_root())
 
 #insert random numbers.
@@ -60,6 +62,7 @@ def test3():
             avl.insert(num, num)
             print_avl_tree(avl.get_root())
         nums_in_tree.append(num)
+    print(avl.avl_to_array())
     print_avl_tree(avl.get_root())
 
 #inser random numbers, than delete random numbers.
@@ -79,6 +82,7 @@ def test4():
         node = avl.search(num)
         if node is not None:
             print(avl.delete(node))
+    print(avl.avl_to_array())
     print_avl_tree(avl.get_root())
 
 

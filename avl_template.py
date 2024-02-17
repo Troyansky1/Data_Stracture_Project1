@@ -231,7 +231,8 @@ class AVLTree(object):
                     return self.req_search(node.get_left(), key)
         return None
 
-
+    def get_size(self):
+        return self.size
 
     """searches for a AVLNode in the dictionary corresponding to the key
 
@@ -240,9 +241,6 @@ class AVLTree(object):
     @rtype: AVLNode
     @returns: the AVLNode corresponding to key or None if key is not found.
     """
-
-    def get_size(self):
-        return self.size
 
     def search(self, key):
         return self.req_search(self.root, key)
@@ -257,6 +255,7 @@ class AVLTree(object):
             node.set_parent(new_parent)
             self.root = node
         return
+
 
     def disconnect_from_parent(self, node):
         parent = node.get_parent()
@@ -299,7 +298,13 @@ class AVLTree(object):
         self.l_rotate(node)
         return 2
 
-    # TODO double check this, it's very confusing :)
+    """Returns a corresponding rotate function.
+
+    @type node: AVLNode
+    @param node: The node with a balance factor of |2|
+    @rtype: function
+    @returns: The corresponding rotate function to be applied on the node.
+    """
     def get_rotate_func(self, node):
         right = node.get_right()
         right_bf = 0
@@ -324,6 +329,15 @@ class AVLTree(object):
         node.debug_print_node()
         return None
 
+    """Climbs up the tree and searches for criminals. Applies rotations as needed.
+
+    @type node: AVLNode
+    @param node: The node which the search should begin with
+    @type after_insert: Boolean
+    @param after_insert: True if we are fixing after insert- for optimizations.
+    @rtype: int
+    @returns: The number of rotations which were performed overall
+    """
     def fix_tree(self, node, after_insert):
         num_actions = 0
         while node is not None and node.is_real_node():
@@ -426,9 +440,9 @@ class AVLTree(object):
 
     def req_avl_to_array(self, node, keys_list):
         if node.is_real_node():
-            self.req_avl_to_array(node.get_left, keys_list)
-            keys_list.append({node.get_key(), node.get_key})
-            self.req_avl_to_array(node.get_right, keys_list)
+            self.req_avl_to_array(node.get_left(), keys_list)
+            keys_list.append((node.get_key(), node.get_value()))
+            self.req_avl_to_array(node.get_right(), keys_list)
         return
 
     """returns an array representing dictionary 
