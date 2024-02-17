@@ -221,6 +221,10 @@ class AVLTree(object):
         self.root = AVLNode(None, None)
         self.size = 0
 
+    def get_size(self):
+        return self.size
+
+    # A recursive binary search function that search can call.
     def req_search(self, node, key):
         if node.is_real_node():
             if node.get_key() == key:
@@ -230,9 +234,6 @@ class AVLTree(object):
             else:
                 return self.req_search(node.get_left(), key)
         return None
-
-    def get_size(self):
-        return self.size
 
     """searches for a AVLNode in the dictionary corresponding to the key
 
@@ -256,7 +257,11 @@ class AVLTree(object):
             self.root = node
         return
 
+    """Disconnects a node from it's parent, both ways.
 
+    @type node: AVLNode
+    @param node: The node to be disconnected
+    """
     def disconnect_from_parent(self, node):
         parent = node.get_parent()
         if parent is not None:
@@ -267,6 +272,13 @@ class AVLTree(object):
         else:
             self.root = AVLNode(None, None)
 
+    """Standard AVL left rotation operation.
+
+    @type node: AVLNode
+    @param node: The "criminal" node to be rotated
+    @rtype: int
+    @returns: The number of rebalancing actions needed to be done
+    """
     def l_rotate(self, node):
         if node is not None:
             parent = node.get_parent()
@@ -279,6 +291,13 @@ class AVLTree(object):
             self.connect_to_parent(new_root, parent)
             return 1
 
+    """Standard AVL right rotation operation.
+
+    @type node: AVLNode
+    @param node: The "criminal" node to be rotated
+    @rtype: int
+    @returns: The number of rebalancing actions needed to be done
+    """
     def r_rotate(self, node):
         if node is not None:
             parent = node.get_parent()
@@ -291,11 +310,25 @@ class AVLTree(object):
             self.connect_to_parent(new_root, parent)
             return 1
 
+    """Standard AVL left and then right rotation operations.
+
+    @type node: AVLNode
+    @param node: The "criminal" node to be rotated
+    @rtype: int
+    @returns: The number of rebalancing actions needed to be done
+    """
     def l_r_rotate(self, node):
         self.l_rotate(node.get_left())
         self.r_rotate(node)
         return 2
 
+    """Standard AVL right and then left rotation operation.
+
+    @type node: AVLNode
+    @param node: The "criminal" node to be rotated
+    @rtype: int
+    @returns: The number of rebalancing actions needed to be done
+    """
     def r_l_rotate(self, node):
         self.r_rotate(node.get_right())
         self.l_rotate(node)
@@ -313,7 +346,6 @@ class AVLTree(object):
         left = node.get_left()
         right_bf = right.get_bf()
         left_bf = left.get_bf()
-
         if node is not None:
             if node.get_bf() == -2:
                 if right_bf == 1:
@@ -352,6 +384,7 @@ class AVLTree(object):
 
         return num_actions
 
+    # A recursive insert function that insert can call.
     def req_insert(self, node, root):
         num_actions = 0
         if node.get_key() > root.get_key():
@@ -457,6 +490,7 @@ class AVLTree(object):
             num_actions = self.fix_tree(min_successor.get_parent(), False)
         return num_actions
 
+    # A recursive avl_to_array function that avl_to_array can call.
     def req_avl_to_array(self, node, keys_list):
         if node.is_real_node():
             self.req_avl_to_array(node.get_left(), keys_list)
