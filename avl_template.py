@@ -90,6 +90,7 @@ class AVLNode(object):
     def get_height(self):
         return self.height
 
+
     """returns the Balance Factor
 
         @rtype: int
@@ -206,6 +207,10 @@ class AVLNode(object):
 
 
 
+
+    ## To use in join function in AVLTREE class
+
+
 """
 A class implementing the ADT Dictionary, using an AVL tree.
 """
@@ -220,6 +225,10 @@ class AVLTree(object):
     def __init__(self):
         self.root = AVLNode(None, None)
         self.size = 0
+
+    def set_root(self, r):
+        self.root = r
+        return None
 
     def get_size(self):
         return self.size
@@ -528,33 +537,48 @@ class AVLTree(object):
 
     def split(self, node):
         tmp = None
+        tmp_tree = AVLTree()
         x = self.root
-        stack_small = []
-        stack_big = []
+        stack_smaller_than_x = []
+        stack_bigger_than_x= []
         while x is not None:
             if node.get_key() > x.get_key():
-                stack_small.append(x)
+                stack_smaller_than_x.append(x)
                 x = x.get_right()
-            if node.get_key() < x.get_key():
-                stack_big.append(x)
+            elif node.get_key() < x.get_key():
+                stack_bigger_than_x.append(x)
                 x = x.get_left()
-            if node.get_key() == x.get_key():
-                stack_small.append(x.get_left())
-                stack_big.append(x.get_right())
+            elif node.get_key() == x.get_key():
+                if x.get_left().is_real_node():
+                    stack_smaller_than_x.append(x.get_left())
+                if x.get_right().is_real_node():
+                    stack_bigger_than_x.append(x.get_right())
                 x = None  # Exit the while
 
-        minT = stack_big.pop()
-        while len(stack_big) != 0:
-            tmp = stack_big.pop()
-            minT.join(tmp.get_right(), tmp.get_key(), tmp.get_value())
-        if tmp is not None:
-            minT.fix_tree(tmp, after_insert=False)
-        maxT = stack_small.pop()
-        while len(stack_small) != 0:
-            tmp = stack_small.pop()
-            maxT.join(tmp.get_left(), tmp.get_key(), tmp.get_value())
-        if tmp is not None:
-            maxT.fix_tree(tmp, after_insert=False)
+        minT = AVLTree()
+        while len(stack_bigger_than_x) != 0:
+            tmp = stack_bigger_than_x.pop()
+            tmp_tree.set_root(tmp.get_right())
+            minT.join(tmp_tree, tmp.get_key(), tmp.get_value())
+
+
+        if minT.get_root().get_bf() >= 2 or minT.get_root().get_bf() <= -2:
+            x = minT.get_root()
+            minT.delete(minT.get_root())
+            minT.insert(x.get_key(), x.get_value())
+
+        minT.fix_tree(tmp, after_insert=False)
+        maxT = AVLTree()
+        while len(stack_smaller_than_x) != 0:
+            tmp = stack_smaller_than_x.pop()
+            tmp_tree.set_root(tmp.get_left())
+            maxT.join(tmp_tree, tmp.get_key(), tmp.get_value())
+
+        if maxT.get_root().get_bf() >= 2 or maxT.get_root().get_bf() <= -2:
+            x = maxT.get_root()
+            minT.delete(maxT.get_root())
+            maxT.insert(x.get_key(), x.get_value())
+        maxT.fix_tree(tmp, after_insert=False)
         return [minT, maxT]
 
     """joins self with key and another AVLTree
@@ -572,31 +596,61 @@ class AVLTree(object):
 
     def join(self, tree2, key, val):
         self.size += tree2.get_size() + 1
-        r = abs(tree2.root.get_height() - self.root.get_height()) + 1
+        r = abs(tree2.get_root().get_height() - self.root.get_height()) + 1
         x = AVLNode(key, val)
-        if tree2.root.get_height() > self.root.get_height():
+        if tree2.get_root().get_height() > self.root.get_height():
             T1 = self
             T2 = tree2
         else:
             T1 = tree2
             T2 = self
-        if T2.root.get_key() > key:  ## then its like the lecturer
-            b = T2.get_root()
-            h = T1.get_root().get_height()
-            c = b
-            while b.get_height() > h:
+        if T2.get_root().get_key() > key:  ## then its like the lecturer
+            if not T1.get_root().is_real_node():
+                x.set_right(T2.get_root())
+                T2.get_root().set_parent(x)
+                self.root = x
+            else:
+                b = T2.get_root()
+                h = T1.get_root().get_height()
                 c = b
-                b = b.get_left()
-            x.set_left(T1)
-            x.set_right(b)
-            c.set_right(x)
-            self.root = T2.root
-        else:  ## T2<x<T1
-            x.set_left(T2.get_root())
-            x.set_right(T1)
-            self.root = x
+                while b.get_height() > h:
+                    c = b
+                    b = b.get_left()
+                x.set_left(T1.get_root())
+                T1.get_root().set_parent(x)
+                x.set_right(b)
+                b.set_parent(x)
+                if c is not b:
+                    c.set_left(x)
+                    x.set_parent(c)
+                    self.root = c
+                else:
+                    self.root = x
 
-        self.fix_tree(x, after_insert = False)
+        else:  ## T2<x<T1   h(T2)> h(T1)
+            if not T1.get_root().is_real_node():
+                x.set_left(T2.get_root())
+                T2.get_root().set_parent(x)
+                self.root = x
+            else:
+                b = T2.get_root()
+                h = T1.get_root().get_height()
+                c = b
+                while b.get_height() > h:
+                    c = b
+                    b = b.get_right()
+                x.set_right(T1.get_root())
+                T1.get_root().set_parent(x)
+                x.set_left(b)
+                b.set_parent(x)
+                if c is not b:
+                    c.set_right(x)
+                    x.set_parent(c)
+                    self.root = c
+                else:
+                    self.root = x
+
+        self.fix_tree(self.get_min_node(self.root), after_insert = False)
 
         return r
 

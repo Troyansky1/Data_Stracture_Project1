@@ -103,12 +103,45 @@ def test5():
     print_avl_tree(avl.get_root())
 
 
+def test6():
+    print_test(inspect.currentframe().f_code.co_name)
+    avl = avl_template.AVLTree()
+    for i in range(1, 5):
+       avl.insert(i, i)
+    print_avl_tree(avl.get_root())
+    print("####################################")
+    print("####################################")
+    avl2 = avl_template.AVLTree()
+    #print_avl_tree(avl2.get_root())
+    print("####################################")
+    print("####################################")
+    avl.join(avl2, 7,7)
+    print_avl_tree(avl.get_root())
+
+def test7():
+    print_test(inspect.currentframe().f_code.co_name)
+    avl = avl_template.AVLTree()
+    for i in range(1, 20):
+       avl.insert(i, i)
+    print_avl_tree(avl.get_root())
+    print("####################################")
+    print("####################################")
+    x = avl_template.AVLNode(7,7)
+    [minT, maxT] = avl.split(x)
+
+    print_avl_tree(minT.get_root())
+    print("####################################")
+    print("####################################")
+    print_avl_tree(maxT.get_root())
+
+
 
 if __name__ == '__main__':
     #test1()
     #test2()
     #test3()
     #test4()
-    test5()
-
+    #test5()
+    #test6()
+    test7()
 
