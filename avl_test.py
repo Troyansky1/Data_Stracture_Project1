@@ -10,7 +10,7 @@ def print_avl_tree(root, title= "Tree"):
     print("\n")
 
 def print_avl_tree_req(root, prefix="", is_left=True):
-    if root is not None:
+    if root.is_real_node():
         key_str = "KEY:" + str(root.key)
         bf_str = " BF:" + str(root.get_bf())
         height_str = " Height:" + str(root.get_height())
@@ -88,9 +88,9 @@ def test4():
 
 
 if __name__ == '__main__':
-    test1()
+    #test1()
     #test2()
     #test3()
-    #test4()
+    test4()
 
 

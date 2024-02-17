@@ -222,7 +222,7 @@ def test_simple_deletions_shouldnt_trigger_rotations():
     assert rebalances == 0
     assert tree.root.left.left == AVLNode(2, 0)
 
-    assert tree.root.size == 10
+    assert tree.size == 10
     assert_valid_avl(tree)
 
 
