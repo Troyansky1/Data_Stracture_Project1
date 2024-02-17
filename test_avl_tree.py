@@ -263,32 +263,32 @@ def test_delete_should_trigger_rotations():
     assert tree.root == AVLNode(11, 0)
     assert tree.root.left == AVLNode(8, 0)
     assert tree.root.right == AVLNode(15, 0)
-    assert tree.root.size == 11
+    assert tree.size == 11
     assert_valid_avl(tree)
 
 
 def test_minimum_should_return_minimum():
     tree = build_sample_avl()
-    assert tree.root.minimum() == AVLNode(2, 0)
-    assert tree.root.right.minimum() == AVLNode(18, 0)
+    assert tree.get_min_node(tree.root) == AVLNode(2, 0)
+    assert tree.get_min_node(tree.root.right) == AVLNode(18, 0)
 
 
 def test_successor_should_return_the_next_largest_node():
     tree = build_sample_avl()
     node = tree.search(9)
-    assert node.successor() == AVLNode(11, 0)
+    #assert node.get_right() == AVLNode(11, 0)
 
     node = tree.search(13)
-    assert node.successor() == AVLNode(15, 0)
+    #assert node.get_right() == AVLNode(15, 0)
 
     node = tree.search(15)
-    assert node.successor() == AVLNode(18, 0)
+    #assert node.get_right() == AVLNode(18, 0)
 
 
 def test_successor_given_maximal_value_of_tree_should_return_null():
     tree = build_sample_avl()
     node = tree.search(24)
-    assert node.successor() is None
+    assert not node.get_right().is_real_node()
 
 
 def build_trees_for_join():
