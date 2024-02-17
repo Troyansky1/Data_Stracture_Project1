@@ -248,13 +248,13 @@ class AVLTree(object):
         return self.req_search(self.root, key)
 
     def connect_to_parent(self, node, new_parent):
-        node.set_parent(new_parent)
         if new_parent is not None:
             if node.get_key() > new_parent.get_key():
                 new_parent.set_right(node)
             else:
                 new_parent.set_left(node)
         else:
+            node.set_parent(new_parent)
             self.root = node
         return
 
@@ -271,10 +271,8 @@ class AVLTree(object):
             new_root = node.get_right()
             child_to_move = new_root.get_left()
             node.set_right(child_to_move)
-            child_to_move.set_parent(node)
             node.recalc_height()
             new_root.set_left(node)
-            node.set_parent(new_root)
             new_root.recalc_height()
             self.connect_to_parent(new_root, parent)
             return 1
@@ -285,10 +283,8 @@ class AVLTree(object):
             new_root = node.get_left()
             child_to_move = new_root.get_right()
             node.set_left(child_to_move)
-            child_to_move.set_parent(node)
             node.recalc_height()
             new_root.set_right(node)
-            node.set_parent(new_root)
             new_root.recalc_height()
             self.connect_to_parent(new_root, parent)
             return 1
@@ -345,7 +341,6 @@ class AVLTree(object):
         if node.get_key() > root.get_key():
             if not root.get_right().is_real_node():
                 root.set_right(node)
-                node.set_parent(root)
                 root.set_height(root.get_height()+1)
                 return
             else:
@@ -356,7 +351,6 @@ class AVLTree(object):
             if not root.get_left().is_real_node():
                 root.set_left(node)
                 root.set_height(root.get_height() + 1)
-                node.set_parent(root)
                 return
             else:
                 self.req_insert(node, root.get_left())
