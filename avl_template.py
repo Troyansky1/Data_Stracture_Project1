@@ -576,8 +576,13 @@ class AVLTree(object):
 
         if maxT.get_root().get_bf() >= 2 or maxT.get_root().get_bf() <= -2:
             x = maxT.get_root()
-            minT.delete(maxT.get_root())
+            maxT.delete(maxT.get_root())
             maxT.insert(x.get_key(), x.get_value())
+
+        if minT.get_root().get_bf() >= 2 or minT.get_root().get_bf() <= -2:
+            x = minT.get_root()
+            minT.delete(minT.get_root())
+            minT.insert(x.get_key(), x.get_value())
         maxT.fix_tree(tmp, after_insert=False)
         return [minT, maxT]
 
