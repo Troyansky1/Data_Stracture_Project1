@@ -233,7 +233,7 @@ class AVLTree(object):
     def get_size(self):
         return self.size
 
-    # A recursive binary search function that search can call.
+    # A recursive binary search function that search can call. Runs in O(log(n))
     def req_search(self, node, key):
         if node.is_real_node():
             if node.get_key() == key:
@@ -372,6 +372,7 @@ class AVLTree(object):
         return None
 
     """Climbs up the tree and searches for criminals. Applies rotations as needed.
+    Runs in O(log(n))- as the max height of the tree.
 
     @type node: AVLNode
     @param node: The node which the search should begin with
@@ -393,25 +394,30 @@ class AVLTree(object):
 
         return num_actions
 
-    # A recursive insert function that insert can call.
+    # A recursive insert function that insert can call. Runs in O(log(n))
     def req_insert(self, node, root):
         num_actions = 0
+        # Searching the right subtree
         if node.get_key() > root.get_key():
+            # Can insert here
             if not root.get_right().is_real_node():
                 root.set_right(node)
                 root.set_height(root.get_height()+1)
                 num_actions += 1
                 return num_actions
+            # Continue the search recursively
             else:
                 num_actions += self.req_insert(node, root.get_right())
                 num_actions += root.recalc_height()
-
+        # Searching the left subtree
         elif node.get_key() < root.get_key():
+            # Can insert here
             if not root.get_left().is_real_node():
                 root.set_left(node)
                 root.set_height(root.get_height() + 1)
                 num_actions += 1
                 return num_actions
+            # Continue the search recursively
             else:
                 num_actions += self.req_insert(node, root.get_left())
                 num_actions += root.recalc_height()
@@ -432,11 +438,14 @@ class AVLTree(object):
     def insert(self, key, val):
         num_actions = 0
         node = AVLNode(key, val)
+        # If the tree is empty insert to the root.
         if not self.root.is_real_node():
             self.root = node
+        # Call recursive insert on the root.
         else:
             num_actions += self.req_insert(node, self.root)
         self.size += 1
+        # Fix the tree from the location of the inserted node and get the number of actions needed.
         num_actions += self.fix_tree(node.get_parent(), after_insert=True)
         return num_actions
 
@@ -460,7 +469,8 @@ class AVLTree(object):
     """
     def get_min_node(self, root):
         min_node = root
-        while min_node.get_left().is_real_node():  # Find minimum in right subtree
+        # Find minimum in right subtree
+        while min_node.get_left().is_real_node():
             min_node = min_node.get_left()
         return min_node
 
@@ -496,6 +506,7 @@ class AVLTree(object):
             self.replace_nodes(node, min_successor)
             # Connect the min successor's successors to the new place.
             self.connect_to_parent(min_successor.get_right(), min_successor.get_parent())
+            # Fix the tree from the location of the parent of the node wich replaced the deleted node.
             num_actions = self.fix_tree(min_successor.get_parent(), False)
         return num_actions
 
