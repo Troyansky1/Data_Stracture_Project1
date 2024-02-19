@@ -549,9 +549,11 @@ class AVLTree(object):
     def split(self, node):
         tmp = None
         tmp_tree = AVLTree()
+        minT = AVLTree()
+        maxT = AVLTree()
         x = self.root
         stack_smaller_than_x = []
-        stack_bigger_than_x= []
+        stack_bigger_than_x = []
         while x is not None:
             if node.get_key() > x.get_key():
                 stack_smaller_than_x.append(x)
@@ -561,26 +563,22 @@ class AVLTree(object):
                 x = x.get_left()
             elif node.get_key() == x.get_key():
                 if x.get_left().is_real_node():
-                    stack_smaller_than_x.append(x.get_left())
+                    minT.set_root(x.get_left())
                 if x.get_right().is_real_node():
-                    stack_bigger_than_x.append(x.get_right())
+                    maxT.set_root(x.get_right())
                 x = None  # Exit the while
 
-        minT = AVLTree()
         while len(stack_bigger_than_x) != 0:
             tmp = stack_bigger_than_x.pop()
             tmp_tree.set_root(tmp.get_right())
-            minT.join(tmp_tree, tmp.get_key(), tmp.get_value())
+            maxT.join(tmp_tree, tmp.get_key(), tmp.get_value())
 
-        minT.fix_tree(tmp, after_insert=False)
-        maxT = AVLTree()
         while len(stack_smaller_than_x) != 0:
             tmp = stack_smaller_than_x.pop()
             tmp_tree.set_root(tmp.get_left())
-            maxT.join(tmp_tree, tmp.get_key(), tmp.get_value())
+            minT.join(tmp_tree, tmp.get_key(), tmp.get_value())
 
 
-        maxT.fix_tree(tmp, after_insert=False)
         return [minT, maxT]
 
     """joins self with key and another AVLTree
@@ -609,15 +607,16 @@ class AVLTree(object):
         # If true going down the left (smaller) tree
         if T2.get_root().get_key() > key:
             # If T1 is a leaf
-            if not T1.get_root().is_real_node(): # TODO check if we can just insert...
+            if not T1.get_root().is_real_node():
                 T2.insert(key, val)
             else:
                 b = T2.get_root()
+                c = None
                 h = T1.get_root().get_height()
                 # Going down the tree until the height of b is no more than h
-                while b.get_height() > h:
+                while b.get_height() > h and b.get_left().is_real_node():
+                    c = b
                     b = b.get_left()
-                c = b.get_parent()
                 x.set_left(T1.get_root())
                 T1.get_root().set_parent(x)
                 x.set_right(b)
@@ -635,21 +634,23 @@ class AVLTree(object):
                 T2.insert(key, val)
             else:
                 b = T2.get_root()
+                c = None
                 h = T1.get_root().get_height()
                 # Going down the tree until the height of b is no more than h
-                while b.get_height() > h:
+                while b.get_height() > h and b.get_right().is_real_node():
+                    c = b
                     b = b.get_right()
-                c = b.get_parent()
                 x.set_right(T1.get_root())
                 T1.get_root().set_parent(x)
                 x.set_left(b)
                 b.set_parent(x)
-                if c is not b:
+                if c is not None:
                     c.set_right(x)
                     x.set_parent(c)
                     self.root = T2.get_root()
                 else:
                     self.root = x
+
 
         self.fix_tree(x, after_insert = False)
 

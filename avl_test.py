@@ -103,7 +103,7 @@ def test5():
     print_avl_tree(avl.get_root())
 
 
-def test6():
+def test6(): #testing join
     print_test(inspect.currentframe().f_code.co_name)
     avl = avl_template.AVLTree()
     for i in range(1, 5):
@@ -112,13 +112,15 @@ def test6():
     print("####################################")
     print("####################################")
     avl2 = avl_template.AVLTree()
-    #print_avl_tree(avl2.get_root())
+    for i in range(10, 20):
+       avl2.insert(i, i)
+    print_avl_tree(avl2.get_root())
     print("####################################")
     print("####################################")
     avl.join(avl2, 7,7)
     print_avl_tree(avl.get_root())
 
-def test7():
+def test7(): #testing split
     print_test(inspect.currentframe().f_code.co_name)
     avl = avl_template.AVLTree()
     for i in range(1, 20):
@@ -128,12 +130,12 @@ def test7():
     print("####################################")
     x = avl_template.AVLNode(7,7)
     [minT, maxT] = avl.split(x)
-    print(minT.get_root())
-    print_avl_tree(minT.get_root().get_key())
+    print(minT.get_root().get_key())
+    print_avl_tree(minT.get_root())
     print("####################################")
     print("####################################")
-    print(maxT.get_root())
-    print_avl_tree(maxT.get_root().get_key())
+    print(maxT.get_root().get_key())
+    print_avl_tree(maxT.get_root())
 
 
 
@@ -143,6 +145,6 @@ if __name__ == '__main__':
     #test3()
     #test4()
     #test5()
-    #test6()
-    test7()
+    test6()
+    #test7()
 
