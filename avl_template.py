@@ -460,7 +460,7 @@ class AVLTree(object):
         old_node.set_value(new_node.get_value())
         old_node.set_key(new_node.get_key())
 
-    """ gets the minimus successor
+    """ gets the minimum successor
 
     @type root: AVLNode
     @param root: The node from which to search the minimus
@@ -473,6 +473,20 @@ class AVLTree(object):
         while min_node.get_left().is_real_node():
             min_node = min_node.get_left()
         return min_node
+
+    """ gets the maximum successor
+
+    @type root: AVLNode
+    @param root: The node from which to search the maximum
+    @rtype: AVLNode
+    @returns: The minimum successor
+    """
+    def get_max_node(self, root):
+        max_node = root
+        # Find minimum in right subtree
+        while max_node.get_right().is_real_node():
+            max_node = max_node.get_right()
+        return max_node
 
     """deletes node from the dictionary
 
