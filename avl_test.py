@@ -138,6 +138,25 @@ def test7(): #testing split
     print_avl_tree(maxT.get_root())
 
 
+def test8():
+    tree = avl_template.AVLTree()
+    tree.insert(33, 0)
+    tree.insert(25, 0)
+    tree.insert(59, 0)
+
+    tree.insert(23, 0)
+    tree.insert(29, 0)
+    tree.insert(120, 0)
+    tree.insert(31, 0)
+    print("tree before is ")
+    print_avl_tree(tree.get_root())
+    print("########")
+    node = tree.search(120)
+    print(tree.delete(node))
+    print("tree after is ")
+    print_avl_tree(tree.get_root())
+    print("########")
+
 
 if __name__ == '__main__':
     #test1()
@@ -145,6 +164,7 @@ if __name__ == '__main__':
     #test3()
     #test4()
     #test5()
-    test6()
+    #test6()
     #test7()
+    test8()
 

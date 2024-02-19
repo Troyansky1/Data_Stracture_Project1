@@ -460,7 +460,7 @@ class AVLTree(object):
         old_node.set_value(new_node.get_value())
         old_node.set_key(new_node.get_key())
 
-    """ gets the minimum successor
+    """ gets the minimus successor
 
     @type root: AVLNode
     @param root: The node from which to search the minimus
@@ -473,20 +473,6 @@ class AVLTree(object):
         while min_node.get_left().is_real_node():
             min_node = min_node.get_left()
         return min_node
-
-    """ gets the maximum successor
-
-    @type root: AVLNode
-    @param root: The node from which to search the maximum
-    @rtype: AVLNode
-    @returns: The minimum successor
-    """
-    def get_max_node(self, root):
-        max_node = root
-        # Find minimum in right subtree
-        while max_node.get_right().is_real_node():
-            max_node = max_node.get_right()
-        return max_node
 
     """deletes node from the dictionary
 
@@ -618,15 +604,15 @@ class AVLTree(object):
         else:
             T1 = tree2
             T2 = self
+
+        if not T1.get_root().is_real_node():  # If T1 is a leaf
+            T2.insert(key, val)
+            return r
+        b = T2.get_root()
+        c = b
+        h = T1.get_root().get_height()
         # If true going down the left (smaller) tree
         if T2.get_root().get_key() > key:
-            # If T1 is a leaf
-            if not T1.get_root().is_real_node():
-                T2.insert(key, val)
-            else:
-                b = T2.get_root()
-                c = None
-                h = T1.get_root().get_height()
                 # Going down the tree until the height of b is no more than h
                 while b.get_height() > h and b.get_left().is_real_node():
                     c = b
@@ -636,20 +622,16 @@ class AVLTree(object):
                 x.set_right(b)
                 b.set_parent(x)
                 # If B is not the root of T2
-                if c is not None:
+                if c is not b:
                     c.set_left(x)
                     x.set_parent(c)
                     self.root = T2.get_root()
                 else:
                     self.root = x
+
+
         # Going down the right (bigger) tree
         else:  ## T2<x<T1   h(T2)> h(T1)
-            if not T1.get_root().is_real_node():
-                T2.insert(key, val)
-            else:
-                b = T2.get_root()
-                c = None
-                h = T1.get_root().get_height()
                 # Going down the tree until the height of b is no more than h
                 while b.get_height() > h and b.get_right().is_real_node():
                     c = b
@@ -658,7 +640,7 @@ class AVLTree(object):
                 T1.get_root().set_parent(x)
                 x.set_left(b)
                 b.set_parent(x)
-                if c is not None:
+                if c is not b:
                     c.set_right(x)
                     x.set_parent(c)
                     self.root = T2.get_root()
@@ -666,7 +648,13 @@ class AVLTree(object):
                     self.root = x
 
 
-        self.fix_tree(x, after_insert = False)
+        rec_node = x
+        while rec_node is not None:
+            rec_node.recalc_height()
+            rec_node = rec_node.get_parent()
+
+        if c.get_bf() >= 2 or c.get_bf() <= -2:
+            self.fix_tree(c, after_insert = False)
 
         return r
 
