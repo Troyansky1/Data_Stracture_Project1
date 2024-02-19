@@ -128,11 +128,12 @@ def test7():
     print("####################################")
     x = avl_template.AVLNode(7,7)
     [minT, maxT] = avl.split(x)
-
-    print_avl_tree(minT.get_root())
+    print(minT.get_root())
+    print_avl_tree(minT.get_root().get_key())
     print("####################################")
     print("####################################")
-    print_avl_tree(maxT.get_root())
+    print(maxT.get_root())
+    print_avl_tree(maxT.get_root().get_key())
 
 
 
