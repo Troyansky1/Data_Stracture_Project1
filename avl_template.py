@@ -68,7 +68,7 @@ class AVLNode(object):
     def get_key(self):
         if self.is_real_node():
             return self.key
-        return 0
+        return None
 
     """returns the value
 
@@ -576,7 +576,7 @@ class AVLTree(object):
         while len(stack_smaller_than_x) != 0:
             tmp = stack_smaller_than_x.pop()
             tmp_tree.set_root(tmp.get_left())
-           # minT.join(tmp_tree, tmp.get_key(), tmp.get_value())
+            minT.join(tmp_tree, tmp.get_key(), tmp.get_value())
 
 
         return [minT, maxT]
@@ -623,11 +623,8 @@ class AVLTree(object):
                 b.set_parent(x)
                 # If B is not the root of T2
                 if c is not b:
-                    print("in ", x.get_key())
-                    print("c is ", c.get_key())
                     c.set_left(x)
                     x.set_parent(c)
-                    print("x parent", x.get_parent().get_key())
                     self.root = T2.get_root()
                 else:
                     self.root = x
@@ -641,6 +638,7 @@ class AVLTree(object):
                     b = b.get_right()
                 x.set_right(T1.get_root())
                 T1.get_root().set_parent(x)
+
                 x.set_left(b)
                 b.set_parent(x)
                 if c is not b:
@@ -650,13 +648,7 @@ class AVLTree(object):
                 else:
                     self.root = x
 
-
-        rec_node = x
-       # while rec_node is not None:
-        #    rec_node.recalc_height()
-         #   rec_node = rec_node.get_parent()
-        print("x parent issss ", x.get_parent().get_key())
-
+        self.get_root().set_parent(None)
         self.fix_tree(x, after_insert = False)
 
         return r

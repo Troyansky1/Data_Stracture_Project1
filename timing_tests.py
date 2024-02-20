@@ -65,7 +65,7 @@ def run_and_calc_cost(num_of_runs, i):
 
 
 def run_increment_i(max_i):
-    for i in range(max_i):
+    for i in range(1, max_i):
         print("*" * 40)
         print("_" * 16, i, "_" * 16)
         print("*" * 40)
