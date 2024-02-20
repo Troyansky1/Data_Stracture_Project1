@@ -28,7 +28,7 @@ def print_test(test):
 #Insert in order and a few deletes. uses rotations.
 def test1():
     print_test(inspect.currentframe().f_code.co_name)
-    avl = avl_template.AVLTree()
+    avl = AVLTree.AVLTree()
     for i in range(1, 30):
        avl.insert(i, i)
     node = avl.search(7)
@@ -41,7 +41,7 @@ def test1():
 # Insert in reverse order and a few deletes. uses rotations.
 def test2():
     print_test(inspect.currentframe().f_code.co_name)
-    avl = avl_template.AVLTree()
+    avl = AVLTree.AVLTree()
     for i in range(30, 1, -1):
         avl.insert(i, i)
     node = avl.search(7)
@@ -54,7 +54,7 @@ def test2():
 #insert random numbers.
 def test3():
     print_test(inspect.currentframe().f_code.co_name)
-    avl = avl_template.AVLTree()
+    avl = AVLTree.AVLTree()
     nums_in_tree = []
     for i in range(20):
         num = random.randint(1, 100)
@@ -68,7 +68,7 @@ def test3():
 #inser random numbers, than delete random numbers.
 def test4():
     print_test(inspect.currentframe().f_code.co_name)
-    avl = avl_template.AVLTree()
+    avl = AVLTree.AVLTree()
     nums_in_tree = []
     for i in range(50):
         num = random.randint(1, 100)
@@ -89,7 +89,7 @@ def test4():
 # Super random, checks for bugs and edge cases
 def test5():
     print_test(inspect.currentframe().f_code.co_name)
-    avl = avl_template.AVLTree()
+    avl = AVLTree.AVLTree()
     nums_in_tree = []
     for i in range(1000):
         num = random.randint(1, 100)
@@ -105,13 +105,13 @@ def test5():
 
 def test6(): #testing join
     print_test(inspect.currentframe().f_code.co_name)
-    avl = avl_template.AVLTree()
+    avl = AVLTree.AVLTree()
     for i in range(1, 5):
        avl.insert(i, i)
     print_avl_tree(avl.get_root())
     print("####################################")
     print("####################################")
-    avl2 = avl_template.AVLTree()
+    avl2 = AVLTree.AVLTree()
     for i in range(10, 20):
        avl2.insert(i, i)
     print_avl_tree(avl2.get_root())
@@ -122,13 +122,13 @@ def test6(): #testing join
 
 def test7(): #testing split
     print_test(inspect.currentframe().f_code.co_name)
-    avl = avl_template.AVLTree()
+    avl = AVLTree.AVLTree()
     for i in range(1, 20):
        avl.insert(i, i)
     print_avl_tree(avl.get_root())
     print("####################################")
     print("####################################")
-    x = avl_template.AVLNode(7,7)
+    x = AVLTree.AVLNode(7,7)
     [minT, maxT] = avl.split(x)
     print(minT.get_root().get_key())
     print_avl_tree(minT.get_root())
@@ -139,7 +139,7 @@ def test7(): #testing split
 
 
 def test8():
-    tree = avl_template.AVLTree()
+    tree = AVLTree.AVLTree()
     tree.insert(33, 0)
     tree.insert(25, 0)
     tree.insert(59, 0)
