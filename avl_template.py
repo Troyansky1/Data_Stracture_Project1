@@ -576,7 +576,7 @@ class AVLTree(object):
         while len(stack_smaller_than_x) != 0:
             tmp = stack_smaller_than_x.pop()
             tmp_tree.set_root(tmp.get_left())
-            minT.join(tmp_tree, tmp.get_key(), tmp.get_value())
+           # minT.join(tmp_tree, tmp.get_key(), tmp.get_value())
 
 
         return [minT, maxT]
@@ -614,7 +614,7 @@ class AVLTree(object):
         # If true going down the left (smaller) tree
         if T2.get_root().get_key() > key:
                 # Going down the tree until the height of b is no more than h
-                while b.get_height() > h and b.get_left().is_real_node():
+                while b.get_height() > h:
                     c = b
                     b = b.get_left()
                 x.set_left(T1.get_root())
@@ -623,8 +623,11 @@ class AVLTree(object):
                 b.set_parent(x)
                 # If B is not the root of T2
                 if c is not b:
+                    print("in ", x.get_key())
+                    print("c is ", c.get_key())
                     c.set_left(x)
                     x.set_parent(c)
+                    print("x parent", x.get_parent().get_key())
                     self.root = T2.get_root()
                 else:
                     self.root = x
@@ -633,7 +636,7 @@ class AVLTree(object):
         # Going down the right (bigger) tree
         else:  ## T2<x<T1   h(T2)> h(T1)
                 # Going down the tree until the height of b is no more than h
-                while b.get_height() > h and b.get_right().is_real_node():
+                while b.get_height() > h:
                     c = b
                     b = b.get_right()
                 x.set_right(T1.get_root())
@@ -649,12 +652,12 @@ class AVLTree(object):
 
 
         rec_node = x
-        while rec_node is not None:
-            rec_node.recalc_height()
-            rec_node = rec_node.get_parent()
+       # while rec_node is not None:
+        #    rec_node.recalc_height()
+         #   rec_node = rec_node.get_parent()
+        print("x parent issss ", x.get_parent().get_key())
 
-        if c.get_bf() >= 2 or c.get_bf() <= -2:
-            self.fix_tree(c, after_insert = False)
+        self.fix_tree(x, after_insert = False)
 
         return r
 
