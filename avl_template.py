@@ -547,8 +547,9 @@ class AVLTree(object):
     """
 
     def split(self, node):
-        tmp = None
-        tmp_tree = AVLTree()
+        sum_of_r = 0
+        num_of_join = 0
+        sub_tree = AVLTree()
         minT = AVLTree()
         maxT = AVLTree()
         x = self.root
@@ -569,17 +570,21 @@ class AVLTree(object):
                 x = None  # Exit the while
 
         while len(stack_bigger_than_x) != 0:
-            tmp = stack_bigger_than_x.pop()
-            tmp_tree.set_root(tmp.get_right())
-            maxT.join(tmp_tree, tmp.get_key(), tmp.get_value())
+            sub_tree_root = stack_bigger_than_x.pop()
+            sub_tree.set_root(sub_tree_root.get_right())
+            r = maxT.join(sub_tree, sub_tree_root.get_key(), sub_tree_root.get_value())
+            sum_of_r += r
+            num_of_join += 1
 
         while len(stack_smaller_than_x) != 0:
-            tmp = stack_smaller_than_x.pop()
-            tmp_tree.set_root(tmp.get_left())
-            minT.join(tmp_tree, tmp.get_key(), tmp.get_value())
+            sub_tree_root = stack_smaller_than_x.pop()
+            sub_tree.set_root(sub_tree_root.get_left())
+            minT.join(sub_tree, sub_tree_root.get_key(), sub_tree_root.get_value())
+            sum_of_r += r
+            num_of_join += 1
 
 
-        return [minT, maxT]
+        return [minT, maxT, ]
 
     """joins self with key and another AVLTree
 

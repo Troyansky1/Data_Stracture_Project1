@@ -38,7 +38,7 @@ def calc_rand_cost(tree, tree_size):
 
 
 def calc_max_cost(tree):
-    max_key = tree.get_max_node(tree.get_root())
+    max_key = tree.get_max_node(tree.get_root().get_left())
     max_cost = tree.split(max_key)[2] #TODO change in avl tree return cost from split
     return max_cost
 
