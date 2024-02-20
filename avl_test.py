@@ -1,7 +1,7 @@
 
 import random
 import inspect
-import avl_template
+import AVLTree
 
 
 def print_avl_tree(root, title= "Tree"):

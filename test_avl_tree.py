@@ -1,8 +1,8 @@
 import unittest
-import avl_template
+import AVLTree
 import pytest
 
-from avl_template import AVLNode, AVLTree
+from AVLTree import AVLNode, AVLTree
 
 AVLNode.__eq__ = lambda self, other: self.key == other.key and self.value == other.value
 AVLNode.__bool__ = lambda self: self.is_real_node()

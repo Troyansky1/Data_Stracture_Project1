@@ -1,8 +1,8 @@
-# username - complete info
-# id1      - complete info
-# name1    - complete info
-# id2      - complete info
-# name2    - complete info
+# username - troyansky1
+# id1      - 319029211
+# name1    - Shira Troyansky
+# id2      - 212810741
+# name2    - Elissa Najjar
 
 
 """A class represnting a node in an AVL tree"""

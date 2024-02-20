@@ -1,5 +1,5 @@
 import random
-import avl_template
+import AVLTree
 
 
 def get_tree_size(i):
@@ -7,8 +7,8 @@ def get_tree_size(i):
 
 
 def build_random_tree(i):
-    tree1 = avl_template.AVLTree()
-    tree2 = avl_template.AVLTree()
+    tree1 = AVLTree.AVLTree()
+    tree2 = AVLTree.AVLTree()
     tree_size = get_tree_size(i)
     for j in range(tree_size):
         key = get_rand_key_not_in_tree(tree1, tree_size)
