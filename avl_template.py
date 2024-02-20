@@ -506,7 +506,10 @@ class AVLTree(object):
             min_successor = self.get_min_node(right)
             self.replace_nodes(node, min_successor)
             # Connect the min successor's successors to the new place.
-            if min_successor.get_right().is_real_node():
+            if min_successor == right:
+                node.set_right(min_successor.get_right())
+                min_successor.get_right().set_parent(node)
+            elif min_successor.get_right().is_real_node():
                 self.connect_to_parent(min_successor.get_right(), min_successor.get_parent())
             else:
                 min_successor.get_parent().set_left(AVLNode(None, None))
