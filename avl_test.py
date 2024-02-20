@@ -91,7 +91,7 @@ def test5():
     print_test(inspect.currentframe().f_code.co_name)
     avl = avl_template.AVLTree()
     nums_in_tree = []
-    for i in range(200):
+    for i in range(1000):
         num = random.randint(1, 100)
         if num not in nums_in_tree:
             avl.insert(num, num)

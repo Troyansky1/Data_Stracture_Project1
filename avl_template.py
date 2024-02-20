@@ -102,7 +102,7 @@ class AVLNode(object):
             height_right = self.get_right().get_height()
             height_left = self.get_left().get_height()
             return height_left - height_right
-        return -1
+        return 0
 
     """sets left child
 
@@ -261,6 +261,7 @@ class AVLTree(object):
                 new_parent.set_right(node)
             else:
                 new_parent.set_left(node)
+            node.set_parent(new_parent)
         else:
             node.set_parent(new_parent)
             self.root = node
@@ -505,7 +506,10 @@ class AVLTree(object):
             min_successor = self.get_min_node(right)
             self.replace_nodes(node, min_successor)
             # Connect the min successor's successors to the new place.
-            self.connect_to_parent(min_successor.get_right(), min_successor.get_parent())
+            if min_successor.get_right().is_real_node():
+                self.connect_to_parent(min_successor.get_right(), min_successor.get_parent())
+            else:
+                min_successor.get_parent().set_left(AVLNode(None, None))
             # Fix the tree from the location of the parent of the node wich replaced the deleted node.
             num_actions = self.fix_tree(min_successor.get_parent(), False)
         return num_actions
