@@ -158,6 +158,34 @@ def test8():
     print("########")
 
 
+def test9():
+    print_test(inspect.currentframe().f_code.co_name)
+    avl = AVLTree.AVLTree()
+    nums_in_tree = []
+    for i in range(20):
+        num = random.randint(1, 100)
+        if num not in nums_in_tree:
+            avl.insert(num, num)
+            nums_in_tree.append(num)
+
+    print("tree before")
+    print_avl_tree(avl.get_root())
+    print("split for ", nums_in_tree[10])
+    print("######################")
+    node = avl.search(nums_in_tree[10])
+    [minT, maxT] = avl.split(node)
+    print("tree min is ")
+    print_avl_tree(minT.get_root())
+    print("##################")
+    print("tree max is ")
+    print_avl_tree(maxT.get_root())
+    minT.join(maxT, nums_in_tree[3], nums_in_tree[3])
+    print("##################")
+    print("tree joined is ")
+    print_avl_tree(minT.get_root())
+
+
+
 if __name__ == '__main__':
     #test1()
     #test2()

@@ -570,28 +570,28 @@ class AVLTree(object):
                 stack_bigger_than_x.append(x)
                 x = x.get_left()
             elif node.get_key() == x.get_key():
-                if x.get_left().is_real_node():
+                if x.get_left().is_real_node() and x.get_left() is not None:
                     minT.set_root(x.get_left())
-                if x.get_right().is_real_node():
+                if x.get_right().is_real_node() and x.get_right() is not None:
                     maxT.set_root(x.get_right())
                 x = None  # Exit the while
 
         while len(stack_bigger_than_x) != 0:
             sub_tree_root = stack_bigger_than_x.pop()
             sub_tree.set_root(sub_tree_root.get_right())
-            r = maxT.join(sub_tree, sub_tree_root.get_key(), sub_tree_root.get_value())
-            sum_of_r += r
+            maxT.join(sub_tree, sub_tree_root.get_key(), sub_tree_root.get_value())
+            sum_of_r += 1
             num_of_join += 1
 
         while len(stack_smaller_than_x) != 0:
             sub_tree_root = stack_smaller_than_x.pop()
             sub_tree.set_root(sub_tree_root.get_left())
             minT.join(sub_tree, sub_tree_root.get_key(), sub_tree_root.get_value())
-            sum_of_r += r
+            sum_of_r += 1
             num_of_join += 1
 
 
-        return [minT, maxT, ]
+        return [minT, maxT]
 
     """joins self with key and another AVLTree
 
@@ -607,9 +607,18 @@ class AVLTree(object):
     """
 
     def join(self, tree2, key, val):
+        self.get_root().set_parent(None)
+        tree2.get_root().set_parent(None)
         self.size += tree2.get_size() + 1
         r = abs(tree2.get_root().get_height() - self.root.get_height()) + 1
         x = AVLNode(key, val)
+        if not tree2.get_root().is_real_node():  # If tree2 is empty
+            self.insert(key, val)
+            return r
+        if not self.root.is_real_node():  # If self is empty
+            tree2.insert(key, val)
+            self.set_root(tree2.get_root())
+            return r
         if tree2.get_root().get_height() > self.root.get_height():
             T1 = self
             T2 = tree2
@@ -617,9 +626,6 @@ class AVLTree(object):
             T1 = tree2
             T2 = self
 
-        if not T1.get_root().is_real_node():  # If T1 is a leaf
-            T2.insert(key, val)
-            return r
         b = T2.get_root()
         c = b
         h = T1.get_root().get_height()
