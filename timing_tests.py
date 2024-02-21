@@ -18,16 +18,16 @@ def build_random_tree(i):
 
 
 def get_rand_node_in_tree(tree, max):
-    key = random.randint(max)
+    key = random.randint(-max, max)
     while tree.search(key) is None:
-        key = random.randint(max)
+        key = random.randint(-max, max)
     return tree.search(key)
 
 
 def get_rand_key_not_in_tree(tree, max):
-    key = random.randint(max)
+    key = random.randint(-max, max)
     while tree.search(key) is not None:
-        key = random.randint(max)
+        key = random.randint(-max, max)
     return key
 
 
@@ -48,14 +48,14 @@ def run_and_calc_cost(num_of_runs, i):
     sum_costs_rand = 0
     max_cost_max = 0
     sum_costs_max = 0
-    for j in num_of_runs:
+    for j in range(num_of_runs):
         tree1, tree2 = build_random_tree(i)
         cost_rand = calc_rand_cost(tree1, get_tree_size(i))
-        if cost_rand>max_cost_rand:
+        if cost_rand > max_cost_rand:
             max_cost_rand = cost_rand
         sum_costs_rand += cost_rand
 
-        cost_max = calc_max_cost(tree2, )
+        cost_max = calc_max_cost(tree2)
         if cost_max > max_cost_max:
             max_cost_max = cost_max
         sum_costs_max += cost_max
@@ -74,9 +74,5 @@ def run_increment_i(max_i):
         print("Max cost for spliting from the max node is", max_cost_max)
         print("Avg cost for random split is ", avg_cost_rand)
         print("Avg cost for spliting from the max node is", avg_cost_max)
-
-
-
-
 
 

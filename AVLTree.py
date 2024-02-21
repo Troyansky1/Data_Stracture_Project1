@@ -579,19 +579,19 @@ class AVLTree(object):
         while len(stack_bigger_than_x) != 0:
             sub_tree_root = stack_bigger_than_x.pop()
             sub_tree.set_root(sub_tree_root.get_right())
-            maxT.join(sub_tree, sub_tree_root.get_key(), sub_tree_root.get_value())
-            sum_of_r += 1
+            r = maxT.join(sub_tree, sub_tree_root.get_key(), sub_tree_root.get_value())
+            sum_of_r += r
             num_of_join += 1
 
         while len(stack_smaller_than_x) != 0:
             sub_tree_root = stack_smaller_than_x.pop()
             sub_tree.set_root(sub_tree_root.get_left())
-            minT.join(sub_tree, sub_tree_root.get_key(), sub_tree_root.get_value())
-            sum_of_r += 1
+            r= minT.join(sub_tree, sub_tree_root.get_key(), sub_tree_root.get_value())
+            sum_of_r += r
             num_of_join += 1
 
 
-        return [minT, maxT]
+        return [minT, maxT, sum_of_r/num_of_join]
 
     """joins self with key and another AVLTree
 
