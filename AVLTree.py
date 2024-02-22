@@ -194,22 +194,6 @@ class AVLNode(object):
             return False
         return True
 
-    def debug_print_node(self):
-        left_val = self.get_left().get_value()
-        left_bf = self.get_left().get_bf()
-        left_height = self.get_left().get_height()
-        right_val = self.get_right().get_value()
-        right_bf = self.get_right().get_bf()
-        right_height = self.get_right().get_height()
-        print("node:", "value:", self.get_value(), "bf:", self.get_bf(), "Height:", self.get_height())
-        print("  right:", "value:", right_val, "bf:", right_bf, "height:", right_height, "")
-        print("  left:", "value:", left_val, "bf:", left_bf, "height:", left_height, "")
-
-
-
-
-    ## To use in join function in AVLTREE class
-
 
 """
 A class implementing the ADT Dictionary, using an AVL tree.
@@ -369,7 +353,6 @@ class AVLTree(object):
                 if left_bf == 1 or left_bf == 0:
                     return self.r_rotate
 
-        node.debug_print_node()
         return None
 
     """Climbs up the tree and searches for criminals. Applies rotations as needed.
@@ -377,19 +360,16 @@ class AVLTree(object):
 
     @type node: AVLNode
     @param node: The node which the search should begin with
-    @type after_insert: Boolean
-    @param after_insert: True if we are fixing after insert- for optimizations.
     @rtype: int
     @returns: The number of rotations which were performed overall
     """
-    def fix_tree(self, node, after_insert):
+    def fix_tree(self, node):
         num_actions = 0
         while node is not None and node.is_real_node():
             num_actions += node.recalc_height()
             parent = node.get_parent()
             if abs(node.get_bf()) == 2:
                 rotate_func = self.get_rotate_func(node)
-                # print(rotate_func.__name__, "parent is", parent.get_key())
                 num_actions += rotate_func(node)
             node = parent
 
@@ -447,7 +427,7 @@ class AVLTree(object):
             num_actions += self.req_insert(node, self.root)
         self.size += 1
         # Fix the tree from the location of the inserted node and get the number of actions needed.
-        num_actions += self.fix_tree(node.get_parent(), after_insert=True)
+        num_actions += self.fix_tree(node.get_parent())
         return num_actions
 
     """ Takes the values (key and val) from the new node and sets in the place of the old node. Replace in-place.
@@ -491,15 +471,15 @@ class AVLTree(object):
         # Node to delete has no children
         if not right.is_real_node() and not left.is_real_node():
             self.disconnect_from_parent(node)
-            num_actions = self.fix_tree(parent, False)
+            num_actions = self.fix_tree(parent)
         # Node to delete has no left child
         elif not left.is_real_node() and right.is_real_node():
             self.connect_to_parent(right, parent)
-            num_actions = self.fix_tree(parent, False)
+            num_actions = self.fix_tree(parent)
         # Node to delete has no right child
         elif left.is_real_node() and not right.is_real_node():
             self.connect_to_parent(left, parent)
-            num_actions = self.fix_tree(parent, False)
+            num_actions = self.fix_tree(parent)
         # Node to delete has both children
         else:
             # Replaces with the minimun successor
@@ -513,7 +493,7 @@ class AVLTree(object):
                 self.connect_to_parent(min_successor.get_right(), min_successor.get_parent())
             else:
                 min_successor.get_parent().set_left(AVLNode(None, None))
-            # Fix the tree from the location of the parent of the node wich replaced the deleted node.
+            # Fix the tree from the location of the parent of the node which replaced the deleted node.
             num_actions = self.fix_tree(min_successor.get_parent(), False)
         return num_actions
 
@@ -596,7 +576,7 @@ class AVLTree(object):
             num_of_join += 1
 
 
-        return [minT, maxT, sum_of_r/num_of_join, max_r]
+        return minT, maxT
 
     """joins self with key and another AVLTree
 
@@ -672,7 +652,7 @@ class AVLTree(object):
                     self.root = x
 
         self.get_root().set_parent(None)
-        self.fix_tree(x, after_insert = False)
+        self.fix_tree(x)
 
         return r
 
