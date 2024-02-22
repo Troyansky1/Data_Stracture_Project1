@@ -39,7 +39,7 @@ def calc_rand_cost(tree, tree_size):
 
 def calc_max_cost(tree):
     max_key = get_max_node(tree.get_root().get_left())
-    max_cost = tree.split(max_key)[2] #TODO change in avl tree return cost from split
+    max_cost = tree.split(max_key)[3] #TODO change in avl tree return cost from split
     return max_cost
 
 def get_max_node(node):
@@ -72,11 +72,11 @@ def run_increment_i(max_i):
         print("*" * 40)
         print("_" * 16, i, "_" * 16)
         print("*" * 40)
-        max_cost_rand, avg_cost_rand, max_cost_max, avg_cost_max = run_and_calc_cost(23, i)
+        max_cost_rand, avg_cost_rand, max_cost_max, avg_cost_max = run_and_calc_cost(10, i)
         print("Max cost for random split is ", max_cost_rand)
         print("Max cost for spliting from the max node is", max_cost_max)
         print("Avg cost for random split is ", avg_cost_rand)
         print("Avg cost for spliting from the max node is", avg_cost_max)
 
 
-run_increment_i(10)
+run_increment_i(8)
