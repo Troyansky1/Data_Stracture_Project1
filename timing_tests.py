@@ -3,7 +3,7 @@ import AVLTree
 
 
 def get_tree_size(i):
-    return 1000 * (2 ^ i)
+    return 1000 * (2 ** i)
 
 
 def build_random_tree(i):
@@ -18,16 +18,16 @@ def build_random_tree(i):
 
 
 def get_rand_node_in_tree(tree, max):
-    key = random.randint(-max, max)
-    while tree.search(key) is None:
-        key = random.randint(-max, max)
-    return tree.search(key)
+    arr = tree.avl_to_array()
+    key = random.randint(0, max)
+    return tree.search(arr[key][0])
 
 
 def get_rand_key_not_in_tree(tree, max):
-    key = random.randint(-max, max)
+    key = random.randint(0, 5*max)
     while tree.search(key) is not None:
-        key = random.randint(-max, max)
+        key = random.randint(0, 5*max)
+
     return key
 
 
@@ -38,11 +38,14 @@ def calc_rand_cost(tree, tree_size):
 
 
 def calc_max_cost(tree):
-    max_key = tree.get_max_node(tree.get_root().get_left())
+    max_key = get_max_node(tree.get_root().get_left())
     max_cost = tree.split(max_key)[2] #TODO change in avl tree return cost from split
     return max_cost
 
-
+def get_max_node(node):
+    while node.get_right() is not None and node.get_right().is_real_node():
+        node = node.get_right()
+    return node
 def run_and_calc_cost(num_of_runs, i):
     max_cost_rand = 0
     sum_costs_rand = 0
@@ -65,14 +68,15 @@ def run_and_calc_cost(num_of_runs, i):
 
 
 def run_increment_i(max_i):
-    for i in range(1, max_i):
+    for i in range(1, max_i+1):
         print("*" * 40)
         print("_" * 16, i, "_" * 16)
         print("*" * 40)
-        max_cost_rand, avg_cost_rand, max_cost_max, avg_cost_max = run_and_calc_cost(100, i)
+        max_cost_rand, avg_cost_rand, max_cost_max, avg_cost_max = run_and_calc_cost(23, i)
         print("Max cost for random split is ", max_cost_rand)
         print("Max cost for spliting from the max node is", max_cost_max)
         print("Avg cost for random split is ", avg_cost_rand)
         print("Avg cost for spliting from the max node is", avg_cost_max)
 
 
+run_increment_i(10)
